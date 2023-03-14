@@ -1,0 +1,19 @@
+.form_body {
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 20%);
+  padding: 30px 20px;
+  width: 90vw;
+  max-width: 800px;
+  margin: auto;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  top: 50%;
+}
+
+.hide {
+  display: none;
+}
+.show {
+  display: block;
+}

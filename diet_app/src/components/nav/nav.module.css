@@ -1,0 +1,52 @@
+.nav_body {
+  box-shadow: 0 10px 10px rgb(0 0 0 / 20%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  border: 1px solid black;
+  padding: 15px 25px;
+  background-color: #222831;
+}
+.navLink {
+  font-weight: lighter;
+  font-size: 20px;
+  margin: 0 40px;
+  text-decoration: none;
+  color: white;
+  height: 100%;
+}
+
+.navLink:hover {
+  color: #00adb5;
+}
+.nav_body button {
+  cursor: pointer;
+  color: white;
+  background-color: transparent;
+  border: 0;
+}
+
+.getstarted {
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  top: 7px;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 20%);
+  border-radius: 20px;
+  background-color: #00adb5;
+  color: white;
+  padding: 10px;
+}
+
+.active {
+  color: #00adb5;
+}
+
+.login_logout{
+  text-decoration: none;
+  color: white;
+}
+

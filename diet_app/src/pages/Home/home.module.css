@@ -1,0 +1,145 @@
+/* section 1 intro */
+body {
+  scroll-behavior: smooth;
+}
+section {
+  margin-top: 80px;
+}
+.section1 {
+  margin-top: 70px;
+  width: 100%;
+  text-align: center;
+}
+.section1 h1 {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: normal;
+}
+.section1 p {
+  font-size: 22px;
+  line-height: 1.5;
+}
+.section1 button {
+  color: white;
+  font-weight: 700;
+  font-size: larger;
+  background-color: #00adb5;
+  width: 300px;
+  padding: 20px 0;
+  border: 0;
+  border-radius: 30px;
+  cursor: pointer;
+}
+.LINK{
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
+  font-size: larger;
+}
+
+.section1 img {
+  width: 400px;
+  height: 400px;
+  display: none;
+}
+
+/* section3  */
+.section3,
+.section4 {
+  width: 100%;
+  text-align: center;
+}
+.section3 h3,
+.section4 h3 {
+  font-size: 36px;
+  font-weight: 700;
+}
+.section3 p,
+.section4 p {
+  font-size: larger;
+  color: #777989;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-evenly;
+}
+.small_container {
+  width: 300px;
+  margin: 20px 10px;
+}
+
+.small_container p {
+  font-size: 14px;
+}
+
+/* section5  */
+
+@media only screen and (min-width: 900px) {
+  .section1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+  .s1_content {
+    width: 40%;
+  }
+  .section1 img {
+    display: block;
+  }
+}
+
+/* section_faq frequently asked qustions */
+.section_faq {
+  width: 100%;
+  margin: 50px 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section_faq h3 {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.section_faq .txt_container {
+  box-shadow: 0 4px 5px rgb(0 0 0 / 20%);
+  background-color: #00adb5;
+  padding: 5px 20px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 30px;
+  width: 90%;
+  max-width: 800px;
+  transition: all 0.5s ease;
+  /* 
+  for mobile devices */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.txt_container.active {
+  background-color: white;
+  border: 2px solid #00adb5;
+}
+
+.section_faq .q {
+  font-size: larger;
+  line-height: 1.5;
+}
+
+.section_faq .a {
+  text-align: left;
+  color: #777989;
+  line-height: 1.5;
+  display: none;
+}
+
+.txt_container.active .a {
+  display: block;
+}
