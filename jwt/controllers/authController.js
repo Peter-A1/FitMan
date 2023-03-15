@@ -1,5 +1,8 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
+var nodemailer = require("nodemailer");
+
 
 //err handler
 const handleErrors = (err) => {
@@ -108,3 +111,75 @@ module.exports.getstarted_put = (req, res, next) => {
   });
 };
 
+
+module.exports.forgetpassword_post = async (req, res) => {
+  const email = req.body.email;
+  const tuser = await User.findOne({email});
+  if(!tuser){
+    return res.status(400).json({error:'User not found'});
+  }
+    const secret = tuser.password + "fdhfgsfjsdgfvbhajsk1342178";
+    const link = jwt.sign({id: tuser._id, email: tuser.email}, secret, {expiresIn: '15m'});
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'fitmantest123@gmail.com',
+        pass:'vjuedmjajmlilxfg'
+      }
+    });
+    const setPassLink = `http://localhost:5000/reset-password/${tuser._id}/${link}`;
+    const data = {
+      from:'fitmantest123@gmail.com',
+      to:tuser.email,
+      subject: 'Reset password link',
+      text: setPassLink
+    }
+
+    return User.updateOne({resetLink: link}, (err, User) => {
+      if(err){
+        return res.status(400).json({error:'reset link error'});
+      }
+      else {
+        transporter.sendMail(data, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            return res.status(200).json({message:'reset link sent'});
+          }
+        })
+        
+      }
+    })
+
+  };
+
+module.exports.resetpassword_put = async (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  const oldUser = await User.findOne({ _id: id });
+  if (!oldUser) {
+    return res.json({ status: "User Not Exists!!" });
+  }
+  const secret =  oldUser.password + "fdhfgsfjsdgfvbhajsk1342178";
+  try {
+    const verify = jwt.verify(token, secret);
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    await User.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          password: encryptedPassword,
+        },
+      }
+    );
+
+    res.render("/", { email: verify.email, status: "verified" });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "Something Went Wrong" });
+}
+}

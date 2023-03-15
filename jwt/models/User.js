@@ -49,6 +49,10 @@ const userSchema = new mongoose.Schema({
     },
     calories: {
         type: Number
+    },
+    resetLink: {
+        data: String,
+        default: ''
     }
 }); 
 
