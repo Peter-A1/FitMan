@@ -37,7 +37,7 @@ app.use(bodyParser.json());
 // routes
 app.get("*", checkUser);
 app.get("/", (req, res) => res.render("home"));
-app.get("/smoothies", requireAuth, (req, res) => res.render("smoothies"));
+app.get("/:id", requireAuth, (req, res) => res.render(":id"));
 app.use(authRoutes);
 
 const PORT = process.env.PORT || 5000;
