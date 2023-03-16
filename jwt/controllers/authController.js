@@ -2,7 +2,7 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 var nodemailer = require("nodemailer");
-
+const localIpAddress = require("local-ip-address");
 
 //err handler
 const handleErrors = (err) => {
@@ -46,14 +46,12 @@ const createToken = (id) => {
   });
 };
 
-// controller actions
-module.exports.register_get = (req, res) => {
-  res.render("register");
-};
+module.exports.ip = (req, res) => {
+  res.send(localIpAddress());
+  };
 
-module.exports.login_get = (req, res) => {
-  res.render("login");
-};
+
+// controller actions
 
 module.exports.register_post = async (req, res) => {
   const { name, email, password } = req.body;

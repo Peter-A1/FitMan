@@ -4,7 +4,7 @@ const authRoutes = require("./routes/authRoutes");
 const cookieParser = require("cookie-parser");
 const { requireAuth, checkUser } = require("./middleware/authmw");
 const cors = require("cors");
-const localIpAddress = require("local-ip-address")
+const localIpAddress = require("local-ip-address");
 
 const app = express();
 // cors
@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 // routes
 app.get("*", checkUser);
 app.get("/", (req, res) => res.render("home"));
-app.get("/:id", requireAuth, (req, res) => res.render(":id"));
+//app.get("/:id", requireAuth, (req, res) => res.render(":id"));
 app.use(authRoutes);
 
 const PORT = 5000;
