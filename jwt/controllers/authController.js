@@ -91,7 +91,7 @@ module.exports.logout_get = (req, res) => {
 module.exports.getstarted_put = (req, res, next) => {
   User.findByIdAndUpdate({_id:req.params.id}, req.body).then(function(){
     User.findOne({_id: req.params.id}, req.body).then(function(User){
-
+        const user = User;
       //caluclating calories algorithm
       if(User.gender == 'Male'){
         var bmr = 655.1 + (9.563 * User.weight) + (1.850 * User.height) - (4.676 * User.age);
@@ -106,7 +106,7 @@ module.exports.getstarted_put = (req, res, next) => {
        }else if(User.goal == "2"){
         User.calories = rawcal + 500;
        }
-      res.send(User.name, User.email,User.gender,User.age,User.height,User.weight,User.calories,User.goal);
+      res.send(user);
     });
   });
 };
