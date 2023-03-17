@@ -182,4 +182,8 @@ module.exports.resetpassword_put = async (req, res) => {
     console.log(error);
     res.json({ status: "Something Went Wrong" });
 }
+};
+
+module.exports.userData = (res, req) => {
+  res.send(User);
 }

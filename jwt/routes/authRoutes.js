@@ -12,6 +12,6 @@ router.put('/:id/getstarted', authController.getstarted_put);
 router.post('/forget-password', authController.forgetpassword_post); 
 router.post('/reset-password/:id/:token', authController.resetpassword_put);
 router.get('/ip', authController.ip);
-
+router.get('/userData', authController.userData);
 
 module.exports = router;
