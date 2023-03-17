@@ -103,11 +103,13 @@ module.exports.getstarted_put = (req, res, next) => {
        var rawcal = bmr * User.activity_level;
        if(User.goal == "1"){
         User.calories = rawcal - 500;
+        
        }else if(User.goal == "2"){
         User.calories = rawcal + 500;
-       }
-      res.send(user);
-    });
+               
+      };
+      res.send(User);   
+     });
   });
 };
 
@@ -184,6 +186,10 @@ module.exports.resetpassword_put = async (req, res) => {
 }
 };
 
-module.exports.userData = (res, req) => {
-  res.send(User);
+module.exports.userData = (req, res) => {
+  User.findOne({_id: req.params.id}, req.body).then(function(User){
+    res.send(User);
+  });
+
+
 };
