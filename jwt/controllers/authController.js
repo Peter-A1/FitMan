@@ -106,7 +106,7 @@ module.exports.getstarted_put = (req, res, next) => {
        }else if(User.goal == "2"){
         User.calories = rawcal + 500;
        }
-      res.send(User);
+      res.send(User.name, User.email,User.gender,User.age,User.height,User.weight,User.calories,User.goal);
     });
   });
 };
@@ -186,4 +186,4 @@ module.exports.resetpassword_put = async (req, res) => {
 
 module.exports.userData = (res, req) => {
   res.send(User);
-}
+};
