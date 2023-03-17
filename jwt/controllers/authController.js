@@ -91,6 +91,8 @@ module.exports.logout_get = (req, res) => {
 module.exports.getstarted_put = (req, res, next) => {
   User.findByIdAndUpdate({_id:req.params.id}, req.body).then(function(){
     User.findOne({_id: req.params.id}, req.body).then(function(User){
+
+      //caluclating calories algorithm
       if(User.gender == 'Male'){
         var bmr = 655.1 + (9.563 * User.weight) + (1.850 * User.height) - (4.676 * User.age);
         
