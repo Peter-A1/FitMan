@@ -3,6 +3,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 var nodemailer = require("nodemailer");
 const localIpAddress = require("local-ip-address");
+const { db } = require("../models/User");
+
+
+let ucalories = 1;
 
 //err handler
 const handleErrors = (err) => {
@@ -88,10 +92,11 @@ module.exports.logout_get = (req, res) => {
 
  
 
-module.exports.getstarted_put = (req, res, next) => {
-  User.findByIdAndUpdate({_id:req.params.id}, req.body).then(function(){
-    User.findOne({_id: req.params.id}, req.body).then(function(User){
-        const user = User;
+module.exports.getstarted_put = (req, res) => {
+  var ucalories;
+  User.findById({_id:req.params.id}, req.body).then(function(){
+    User.findOneAndUpdate({_id: req.params.id}, req.body).then(function(User){
+        
       //caluclating calories algorithm
       if(User.gender == 'Male'){
         var bmr = 655.1 + (9.563 * User.weight) + (1.850 * User.height) - (4.676 * User.age);
@@ -102,16 +107,27 @@ module.exports.getstarted_put = (req, res, next) => {
        }
        var rawcal = bmr * User.activity_level;
        if(User.goal == "1"){
-        User.calories = rawcal - 500;
+        ucalories = rawcal - 500;
+        updateCal(ucalories);
         
-       }else if(User.goal == "2"){
-        User.calories = rawcal + 500;
-               
+       }else {
+        ucalories = rawcal + 500;
+        updateCal(ucalories);
       };
-      res.send(User);   
-     });
+     });  
+     
+     async function updateCal(ucalories){
+      User.findOneAndUpdate({_id: req.params.id}, {calories:await ucalories}).then(function(User){
+        console.log("done");
+        res.send(User);
+        console.log(ucalories);
+       });
+     }
+     
   });
+  
 };
+
 
 
 module.exports.forgetpassword_post = async (req, res) => {
@@ -188,7 +204,9 @@ module.exports.resetpassword_put = async (req, res) => {
 
 module.exports.userData = (req, res) => {
   User.findOne({_id: req.params.id}, req.body).then(function(User){
+    
     res.send(User);
+    console.log(User.calories);
   });
 
 
