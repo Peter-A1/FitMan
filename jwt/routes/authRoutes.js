@@ -13,5 +13,11 @@ router.post('/forget-password', authController.forgetpassword_post);
 router.post('/reset-password/:id/:token', authController.resetpassword_put);
 router.get('/ip', authController.ip);
 router.get('/:id/userData', authController.userData);
+router.put('/:id/dietplan', authController.dietPlan);
+//router.get('/:id/plandata', authController.plandata);
+
+
+router.post('/addfood', authController.addfood);
+
 
 module.exports = router;

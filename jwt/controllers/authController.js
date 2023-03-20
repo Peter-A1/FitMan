@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Food = require("../models/Food");
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 var nodemailer = require("nodemailer");
@@ -14,13 +15,13 @@ const handleErrors = (err) => {
   let errors = { name: "", email: "", password: "" };
 
   // incorrect email
-  if (err.message === "Incorrect Email") {
+  if (err.message === "Incorrect email") {
     errors.email = "That email is not registered";
   }
 
   // incorrect password
   if (err.message === "Incorrect password") {
-    errors.email = "That password is not correct";
+    errors.password = "That password is not correct";
   }
 
   //dublicate err code
@@ -99,10 +100,10 @@ module.exports.getstarted_put = (req, res) => {
         
       //caluclating calories algorithm
       if(User.gender == 'Male'){
-        var bmr = 655.1 + (9.563 * User.weight) + (1.850 * User.height) - (4.676 * User.age);
+        var bmr = (10 * User.weight) + (6.25 * User.height) - (5 * User.age) + 5;
         
        } else{
-         var bmr = 66.47 + (13.75 * User.weight) + (5.003 * User.height) - (6.755 * User.age);
+         var bmr = (10 * User.weight) + (6.25 * User.height) - (5 * User.age) - 161;
          
        }
        var rawcal = bmr * User.activity_level;
@@ -127,6 +128,101 @@ module.exports.getstarted_put = (req, res) => {
   });
   
 };
+
+module.exports.dietPlan = (req, res) => {
+  var breakfast =[], lunch=[], dinner=[];
+  User.findById({_id:req.params.id}, req.body).then(function(){
+    User.findOneAndUpdate({_id: req.params.id}, req.body).then(function(User){
+         breakfast = req.body.breakfast; lunch = req.body.lunch; dinner = req.body.dinner;
+         updateUfood(breakfast, lunch, dinner);
+         res.send(CreateDietPlan(User.calories, User.breakfast, User.lunch, User.dinner));
+     });  
+     function updateUfood(foodid){
+      User.findOneAndUpdate({_id: req.params.id}, {breakfast: Array.from(breakfast), lunch: Array.from(lunch), dinner: Array.from(dinner)}).then(function(User){
+        console.log(breakfast, lunch, dinner);
+        console.log(User);
+       });
+     }
+  });
+};
+
+
+
+let arr = "";
+
+function CreateDietPlan(calories, arrfavbreakfast, arrfavlunch, arrfavdinner)  {
+  
+  var breakfastCalories = calories /3; 
+  var lunchCalories = calories /3;
+  var dinnerCalories = calories /3;
+  
+  let dietplan = {
+    "breakfast": [],
+    "lunch": [],
+    "dinner": [],
+    "snacks":[]
+  };
+  
+  
+  //BREAKFAST
+  arrfavbreakfast.forEach((favbreakfastitem) => {
+    
+    Food.findOne({Food_id:favbreakfastitem}).then(async function(Food){
+      if((breakfastCalories - Food.food_calories_per_preferred_serving) > 0){
+        dietplan.breakfast.push(await Food);
+        breakfastCalories = breakfastCalories - Food.food_calories_per_preferred_serving;
+      }
+    })
+  }); 
+  //LUNCH
+  arrfavlunch.forEach((favlunchitem) => {
+    Food.findOne({Food_id:favlunchitem}).then(async function(Food){
+      if(lunchCalories - Food.food_calories_per_preferred_serving >= 0){ 
+        dietplan.lunch.push(await Food);
+        lunchCalories = lunchCalories - Food.food_calories_per_preferred_serving;
+      }
+    })
+  });
+
+  //DINNER
+  arrfavdinner.forEach((favdinneritem) => {
+    Food.findOne({Food_id:favdinneritem}).then(async function(Food){
+      if(dinnerCalories - Food.food_calories_per_preferred_serving >= 0){ 
+        dietplan.dinner.push(await Food);
+        dinnerCalories = dinnerCalories - Food.food_calories_per_preferred_serving;
+      }
+    })
+  });
+  
+  setTimeout(() => {
+    const remainingcalories = breakfastCalories+lunchCalories+dinnerCalories;
+  dietplan.snacks.push(`Snack: ${remainingcalories}`);
+  console.log(dietplan, "----------204");
+  },10000);
+  
+  return  dietplan;
+  
+
+
+
+  // User.findById({_id: req.params.id}).then(function(User){
+  //   // console.info(User.breakfast);
+  //   ;
+  //   User.breakfast[1] = 1;
+  //   Food.findOne({Food_id: User.breakfast[1]}, req.body).then(function(Food){
+  //     console.log(Food);
+  //   });
+  //   //breakfast
+  //   // var numberOffoods = User.breakfast.length; console.log(numberOffoods);
+  //   // for(let i = 0; i<numberOffoods;i++){
+  //   //   Food.findOne({food_id:User.breakfast[i]}, req.body).then(function(Food){
+          
+  //   //   });
+  //  // }
+  //})
+};
+
+
 
 
 
@@ -210,4 +306,19 @@ module.exports.userData = (req, res) => {
   });
 
 
+};
+
+
+
+module.exports.addfood = async (req, res) => {
+  const { Food_id, Food_name, food_calories_per_min_servings, food_calories_per_preferred_serving, category, Main, preferred_serving, min_serving } = req.body;
+
+  try {
+    console.log('hello')
+    const food = await Food.create({Food_id, Food_name, food_calories_per_min_servings, food_calories_per_preferred_serving, category, Main, preferred_serving, min_serving });
+    res.status(201).json({food: food});
+  } catch (err) {
+    const errors = handleErrors(err);
+    res.status(405).json({ err });
+  }
 };

@@ -54,7 +54,17 @@ const userSchema = new mongoose.Schema({
     resetLink: {
         data: String,
         default: ''
+    },
+    breakfast: {
+        type: Array
+    },
+    lunch: {
+        type: Array
+    },
+    dinner: {
+        type: Array
     }
+
 }); 
 
 
