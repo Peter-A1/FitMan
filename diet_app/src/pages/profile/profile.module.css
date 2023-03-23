@@ -1,0 +1,87 @@
+
+
+.profile_container {
+  background-color: white;
+  margin-top: 60px;
+  display: flex;
+  width: 90vw;
+  justify-content: space-between;
+  padding: 20px;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 20%);
+  height: 90vh;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+}
+
+.left img {
+  border-radius: 50%;
+  margin: 20px 0;
+  border: 2px solid grey;
+  padding: 3px;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 20%);
+}
+
+.left button {
+  color: white;
+  font-weight: 700;
+  font-size: larger;
+  background-color: #00adb5;
+  width: 260px;
+  padding: 10px 0;
+  border: 0;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.left .edit {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 70px;
+  font-size: 14px;
+  color: #777989;
+}
+
+.left .edit i {
+  font-size: 20px;
+  color: #777989;
+}
+
+.left .edit p {
+  transform: translateY(-3px);
+}
+
+.right {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  width: 70%;
+}
+
+.right .field {
+  color: #777989;
+  width: 300px;
+  margin: 0 20px;
+}
+.right .field span {
+  font-size: 14px;
+}
+.right .field .value_container {
+  border-radius: 5px;
+  background-color: #7779892d;
+  padding: 10px 5px;
+  color: black;
+  margin: 10px 0;
+  padding: 10px;
+  min-height: 40px;
+}
+.row {
+  display: flex;
+}

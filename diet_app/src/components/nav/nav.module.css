@@ -1,6 +1,6 @@
 .nav_body {
   box-shadow: 0 10px 10px rgb(0 0 0 / 20%);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   display: flex;
@@ -8,7 +8,10 @@
   width: 100%;
   border: 1px solid black;
   padding: 15px 25px;
+  height: 55px;
   background-color: #222831;
+  z-index: 500;
+  transition: all 0.4s ease;
 }
 .navLink {
   font-weight: lighter;
@@ -17,6 +20,11 @@
   text-decoration: none;
   color: white;
   height: 100%;
+}
+
+.small_navLink{
+  font-size: 16px;
+  transform: translateY(5px);
 }
 
 .navLink:hover {
@@ -43,10 +51,56 @@
 
 .active {
   color: #00adb5;
+
 }
 
-.login_logout{
+.login_logout {
   text-decoration: none;
   color: white;
 }
 
+.expand_icon {
+  position: absolute;
+  font-size: 30px;
+  top: 14px;
+  left: 30px;
+  cursor: pointer;
+  display: none;
+}
+.expand{
+   /* note the hight is not dynamic to be fixed later */
+  height: auto;
+ 
+}
+
+@media only screen and (max-width: 1000px) {
+  .expand_icon {
+    display: block;
+    /* 
+  for mobile devices */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .navLink {
+    display: none;
+    margin: 10px 0;
+    /* 
+  for mobile devices */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .navLink.show {
+    display: block;
+  }
+
+  .nav_body {
+    min-height: 55px;
+    padding-top: 30px;
+    flex-direction: column;
+    align-items: center;
+ 
+    /* 
+  for mobile devices */
+    -webkit-tap-highlight-color: transparent;
+  }
+}

@@ -1,19 +1,209 @@
 .form_body {
-  position: absolute;
+  margin: 0;
+  position: fixed;
   background-color: white;
   box-shadow: 0 4px 5px rgb(0 0 0 / 20%);
-  padding: 30px 20px;
-  width: 90vw;
-  max-width: 800px;
-  margin: auto;
+  padding: 30px 50px;
   border-radius: 10px;
-  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 90vw;
+  max-width: 600px;
   top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+ 
+}
+
+.progress_bar.one {
+  width: 25%;
+}
+.progress_bar.two {
+  width: 50%;
+}
+.progress_bar.three {
+  width: 75%;
+}
+.progress_bar.four {
+  width: 100%;
+}
+.progress_bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  border-radius: 5px 5px 0 0;
+  background-color: #00adb5;
+  height: 10px;
+  z-index: 50;
+  transition: width 0.5s ease;
+}
+.progress_bar_shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 5px 5px 0 0;
+  width: 100%;
+  background-color: rgb(188, 188, 192);
+  height: 10px;
+}
+
+.step1 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.step1 h1 {
+  font-size: 24px;
+  width: 90%;
+}
+.step1 button {
+  width: 80%;
+  text-align: center;
+  margin-top: 35px;
+  font-size: 18px;
+  font-weight: bolder;
+  cursor: pointer;
+  background-color: #00adb5;
+  border: 0;
+  color: white;
+  padding: 25px 20px;
+  border-radius: 15px;
+}
+.step1 button:hover {
+  background-color: #00858b;
+}
+.step1 button:focus {
+  outline: none;
 }
 
 .hide {
   display: none;
 }
-.show {
+.show1 {
+  display: flex;
+}
+
+.show2 {
   display: block;
+}
+
+form {
+  position: relative;
+  margin: 20px 0 0;
+  padding: 20px 0;
+  height: 100%;
+}
+
+.form_control {
+  position: relative;
+  margin: 55px 0;
+}
+
+.form_control input {
+  margin-left: 10px;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid rgb(188, 188, 192);
+  height: 40px;
+  font-size: 16px;
+}
+
+.form_control input:focus {
+  outline: none;
+  color: #00adb5;
+  border-bottom: 2px solid #00adb5;
+}
+
+.form_control label {
+  position: absolute;
+  color: black;
+  transform: translateY(-15px);
+  width: 100%;
+}
+
+.btn {
+  bottom: 50px;
+  background-color: #00adb5;
+  border: 0;
+  color: white;
+  padding: 20px 60px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  /* 
+  for mobile devices */
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:focus {
+  outline: none;
+}
+
+.nbtn {
+  right: 0;
+}
+.nbtn:hover {
+  background-color: #00858b;
+}
+
+.pbtn {
+  border: 2px solid #00adb5;
+  background-color: white;
+  color: #00858b;
+  left: 0;
+}
+
+.pbtn:hover {
+  background-color: #00acb510;
+}
+
+.buttons_container {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  bottom: 40px;
+}
+
+.options_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.options_container button {
+  cursor: pointer;
+  padding: 15px 5px;
+  margin: 5px 0;
+  border: 2px solid rgb(188, 188, 192);
+  background-color: white;
+  font-size: 16px;
+  border-radius: 10px;
+  /* 
+  for mobile devices */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.options_container button.chosen {
+  border: 2px solid #00adb5;
+  color: #00adb5;
+}
+
+.options_container button:hover {
+  border: 2px solid rgb(122, 122, 124);
+}
+
+@media only screen and (max-width: 600px) {
+  .btn {
+    padding: 20px 40px;
+    margin: 0 10px;
+    /* 
+  for mobile devices */
+    -webkit-tap-highlight-color: transparent;
+  }
 }

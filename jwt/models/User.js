@@ -48,7 +48,8 @@ const userSchema = new mongoose.Schema({
         type: Number
     },
     calories: {
-        type: Number
+        type: Number,
+        default: 100
         
     },
     resetLink: {

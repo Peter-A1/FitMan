@@ -34,5 +34,38 @@ export const login_post = async (url, { email, password }) => {
 export const getData = (url) => {
   fetch(url)
     .then((res) => res.json())
-    .then((data) => console.log(data));
+    .then((data) => data);
+};
+
+export const getData2 = async (url) => {
+  try {
+    const response = await fetch(url);
+    const json = await response.json();
+    console.log(json);
+    return await json
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const put = async (url, data) => {
+  // Awaiting fetch which contains method,
+  // headers and content-type and body
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  // Awaiting response.json()
+  const resData = await response.json();
+
+  // Return response data
+  return resData;
+};
+
+export const GetIp = async () => {
+  return getData2("https://api.ipify.org/?format=json");
 };

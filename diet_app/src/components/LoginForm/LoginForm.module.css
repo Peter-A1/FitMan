@@ -116,3 +116,7 @@ form {
   font-size: 16px;
   transform: translateY(5px);
 }
+
+.pass{
+  cursor: pointer;
+}

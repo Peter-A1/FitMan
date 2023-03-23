@@ -15,6 +15,7 @@ router.get('/ip', authController.ip);
 router.get('/:id/userData', authController.userData);
 router.put('/:id/dietplan', authController.dietPlan);
 //router.get('/:id/plandata', authController.plandata);
+router.get('/:id/fooddata', authController.userData);
 
 
 router.post('/addfood', authController.addfood);

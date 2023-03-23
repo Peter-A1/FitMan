@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Nav } from "../../components/nav/Nav";
 import styles from "./home.module.css";
-export const Home = ({ currentPage, setcurrentPage }) => {
+import * as Apis from "../../api_handller";
+import AnimatedPage from "../../components/animatedPage/AnimatedPage";
+export const Home = ({ IP, token, userData, currentPage, setcurrentPage }) => {
   setcurrentPage("home");
   const [active_qs, setactive_qs] = useState([false, false, false, false]);
   const QA = [
@@ -57,142 +59,164 @@ export const Home = ({ currentPage, setcurrentPage }) => {
             : ""
         }
       />
-      <section className={styles.section1}>
-        <div className={styles.s1_content}>
-          <h1>Your Personal Diet Planner</h1>
+      <AnimatedPage>
+        <section id="section1" className={styles.section1}>
+          <div className={styles.s1_content}>
+            <h1>Your Personal Diet Planner</h1>
+            <p>
+              Calorie and Macro Meal Planner. Serve up recipes for your
+              personalized meal plan automatically. Calculate your nutritional
+              needs and generate custom diet plans for weight loss, bodybuilding
+              and much more!
+            </p>
+
+            {userData && token ? (
+              <Link className={styles.LINK} to={"infoForm"}>
+                <button>GET STARTED NOW</button>
+              </Link>
+            ) : (
+              <Link className={styles.LINK} to={"login"}>
+                <button>GET STARTED NOW</button>
+              </Link>
+            )}
+          </div>
+          <img
+            src={require("../../images/home/home_pic.png")}
+            alt="home_image"
+          />
+        </section>
+
+        <section id="section3" className={styles.section3}>
+          <h3>Custom Diet Plans For Your Needs</h3>
+          <p>Personalize the meal plan to meet your needs</p>
+
+          <div className={styles.container}>
+            <div className={styles.small_container}>
+              <img
+                src={
+                  require("../../images/home/section3/custom-nutritional-targets.svg")
+                    .default
+                }
+                alt="custom-nutritional-targets"
+              />
+              <h4>Custom Nutritional Targets</h4>
+              <p>{section3_ps[0]}</p>
+            </div>
+            <div className={styles.small_container}>
+              <img
+                src={
+                  require("../../images/home/section3/dietary-needs.svg")
+                    .default
+                }
+                alt="dietary-needs"
+              />
+              <h4>Dietary Needs</h4>
+              <p>{section3_ps[1]}</p>
+            </div>
+            <div className={styles.small_container}>
+              <img
+                src={
+                  require("../../images/home/section3/adjust-meal-preferences.svg")
+                    .default
+                }
+                alt="adjust-meal-preferences"
+              />
+              <h4>Adjust Meal Preferences</h4>
+              <p>{section3_ps[2]}</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="section4" className={styles.section4}>
+          <h3>Save Time & Eat Better</h3>
+          <p>Take the stress out of meal planning and stick to your plan.</p>
+
+          <div className={styles.container}>
+            <div className={styles.small_container}>
+              <img
+                src={
+                  require("../../images/home/section4/meal-plan-generator.svg")
+                    .default
+                }
+                alt="meal-plan-generator"
+              />
+              <h4>Meal Plan Generator</h4>
+              <p>{section4_ps[0]}</p>
+            </div>
+            <div className={styles.small_container}>
+              <img
+                src={
+                  require("../../images/home/section4/powerful-secipe-search.svg")
+                    .default
+                }
+                alt="powerful-secipe-search"
+              />
+              <h4>Powerful Recipe Search</h4>
+              <p>{section4_ps[1]}</p>
+            </div>
+            <div className={styles.small_container}>
+              <img
+                src={
+                  require("../../images/home/section4/grocery-list.svg").default
+                }
+                alt="grocery-list"
+              />
+              <h4>Grocery List</h4>
+              <p>{section4_ps[2]}</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="faq" className={styles.section_faq}>
+          <h3>Frequently Asked Questions</h3>
+          <div
+            className={`${styles.txt_container} ${
+              active_qs[0] ? styles.active : " "
+            }`}
+            onClick={() => qa_handller(0)}
+          >
+            <p className={styles.q}>{QA[0].q}</p>
+            <p className={styles.a}>{QA[0].a}</p>
+          </div>
+          <div
+            className={`${styles.txt_container} ${
+              active_qs[1] ? styles.active : " "
+            }`}
+            onClick={() => qa_handller(1)}
+          >
+            <p className={styles.q}>{QA[1].q}</p>
+            <p className={styles.a}>{QA[1].a}</p>
+          </div>
+          <div
+            className={`${styles.txt_container} ${
+              active_qs[2] ? styles.active : " "
+            }`}
+            onClick={() => qa_handller(2)}
+          >
+            <p className={styles.q}>{QA[2].q}</p>
+            <p className={styles.a}>{QA[2].a}</p>
+          </div>
+          <div
+            className={`${styles.txt_container} ${
+              active_qs[3] ? styles.active : " "
+            }`}
+            onClick={() => qa_handller(3)}
+          >
+            <p className={styles.q}>{QA[3].q}</p>
+            <p className={styles.a}>{QA[3].a}</p>
+          </div>
+        </section>
+
+        {/* <section id="about" className={styles.section_about}>
+          <h1>about section</h1>{" "}
           <p>
-            Calorie and Macro Meal Planner. Serve up recipes for your
-            personalized meal plan automatically. Calculate your nutritional
-            needs and generate custom diet plans for weight loss, bodybuilding
-            and much more!
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cum
+            voluptatibus id sapiente nostrum iure! Ab beatae consequatur dolor
+            soluta repudiandae molestias aliquam laudantium in perferendis,
+            autem quia asperiores quod atque?
           </p>
-
-          <Link className={styles.LINK} to={"infoForm"}>
-            <button>GET STARTED NOW</button>
-          </Link>
-        </div>
-        <img src={require("../../images/home/home_pic.png")} alt="home_image" />
-      </section>
-
-      <section className={styles.section3}>
-        <h3>Custom Diet Plans For Your Needs</h3>
-        <p>Personalize the meal plan to meet your needs</p>
-
-        <div className={styles.container}>
-          <div className={styles.small_container}>
-            <img
-              src={
-                require("../../images/home/section3/custom-nutritional-targets.svg")
-                  .default
-              }
-              alt="custom-nutritional-targets"
-            />
-            <h4>Custom Nutritional Targets</h4>
-            <p>{section3_ps[0]}</p>
-          </div>
-          <div className={styles.small_container}>
-            <img
-              src={
-                require("../../images/home/section3/dietary-needs.svg").default
-              }
-              alt="dietary-needs"
-            />
-            <h4>Dietary Needs</h4>
-            <p>{section3_ps[1]}</p>
-          </div>
-          <div className={styles.small_container}>
-            <img
-              src={
-                require("../../images/home/section3/adjust-meal-preferences.svg")
-                  .default
-              }
-              alt="adjust-meal-preferences"
-            />
-            <h4>Adjust Meal Preferences</h4>
-            <p>{section3_ps[2]}</p>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.section4}>
-        <h3>Custom Diet Plans For Your Needs</h3>
-        <p>Personalize the meal plan to meet your needs</p>
-
-        <div className={styles.container}>
-          <div className={styles.small_container}>
-            <img
-              src={
-                require("../../images/home/section4/meal-plan-generator.svg")
-                  .default
-              }
-              alt="meal-plan-generator"
-            />
-            <h4>Meal Plan Generator</h4>
-            <p>{section4_ps[0]}</p>
-          </div>
-          <div className={styles.small_container}>
-            <img
-              src={
-                require("../../images/home/section4/powerful-secipe-search.svg")
-                  .default
-              }
-              alt="powerful-secipe-search"
-            />
-            <h4>Powerful Recipe Search</h4>
-            <p>{section4_ps[1]}</p>
-          </div>
-          <div className={styles.small_container}>
-            <img
-              src={
-                require("../../images/home/section4/grocery-list.svg").default
-              }
-              alt="grocery-list"
-            />
-            <h4>Grocery List</h4>
-            <p>{section4_ps[2]}</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="faq" className={styles.section_faq}>
-        <h3>Frequently Asked Questions</h3>
-        <div
-          className={`${styles.txt_container} ${
-            active_qs[0] ? styles.active : " "
-          }`}
-          onClick={() => qa_handller(0)}
-        >
-          <p className={styles.q}>{QA[0].q}</p>
-          <p className={styles.a}>{QA[0].a}</p>
-        </div>
-        <div
-          className={`${styles.txt_container} ${
-            active_qs[1] ? styles.active : " "
-          }`}
-          onClick={() => qa_handller(1)}
-        >
-          <p className={styles.q}>{QA[1].q}</p>
-          <p className={styles.a}>{QA[1].a}</p>
-        </div>
-        <div
-          className={`${styles.txt_container} ${
-            active_qs[2] ? styles.active : " "
-          }`}
-          onClick={() => qa_handller(2)}
-        >
-          <p className={styles.q}>{QA[2].q}</p>
-          <p className={styles.a}>{QA[2].a}</p>
-        </div>
-        <div
-          className={`${styles.txt_container} ${
-            active_qs[3] ? styles.active : " "
-          }`}
-          onClick={() => qa_handller(3)}
-        >
-          <p className={styles.q}>{QA[3].q}</p>
-          <p className={styles.a}>{QA[3].a}</p>
-        </div>
-      </section>
+        </section> */}
+      </AnimatedPage>
     </div>
   );
 };

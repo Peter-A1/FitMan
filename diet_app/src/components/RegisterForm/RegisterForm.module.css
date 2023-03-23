@@ -1,4 +1,5 @@
 .Form_container {
+  margin-top: 50px;
   position: absolute;
   background-color: white;
   box-shadow: 0 4px 5px rgb(0 0 0 / 20%);
@@ -7,7 +8,7 @@
   max-width: 800px;
   margin: auto;
   border-radius: 10px;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%,-45%);
   top: 50%;
 }
 
@@ -115,7 +116,12 @@ form {
 }
 
 .login_now{
+  text-align: center;
   position: absolute;
   right: 20px;
   font-size: 14px;
+}
+
+.pass{
+  cursor: pointer;
 }
