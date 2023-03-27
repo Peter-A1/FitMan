@@ -13,7 +13,7 @@ router.post('/forget-password', authController.forgetpassword_post);
 router.post('/reset-password/:id/:token', authController.resetpassword_put);
 router.get('/ip', authController.ip);
 router.get('/:id/userData', authController.userData);
-router.put('/:id/dietplan', authController.dietPlan);
+router.put('/:id/Dietplan', authController.DietPlan);
 //router.get('/:id/plandata', authController.plandata);
 router.get('/:id/fooddata', authController.userData);
 

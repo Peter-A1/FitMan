@@ -2,18 +2,13 @@ const mongoose = require('mongoose');
 
 const dietPlanSchema = new mongoose.Schema({
     user_id: {
-        type: Number
+        type: mongoose.Schema.types.objectId, 
+        ref : 'user'
     },
-    user_breakfast: {
-        type: Array
-    },
-    user_lunch: {
-        type: Array
-    },
-    user_dinner: {
+    user_dietplan: {
         type: Array
     }
 })
 
-const dietPlan = mongoose.model('dietPlan',dietPlanSchema);
-module.export = dietPlan;
+const dietPlan = mongoose.model('dietplan',dietPlanSchema);
+module.exports = dietPlan;

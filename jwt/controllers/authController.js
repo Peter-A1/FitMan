@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Food = require("../models/Food");
+const dietPlan = require("../models/dietPlan");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 var nodemailer = require("nodemailer");
@@ -89,62 +90,42 @@ module.exports.logout_get = (req, res) => {
   res.redirect("/");
 };
 
-module.exports.getstarted_put = (req, res) => {
-  var ucalories = 0;
-
-  User.findById({ _id: req.params.id }, req.body).then(function () {
-    User.calories = 0;
-    User.findOneAndUpdate({ _id: req.params.id }, req.body, {
-      calories: ucalories,
-    }).then(function (User) {
+module.exports.getstarted_put = async (req, res) => {
+    User.findByIdAndUpdate({_id: req.params.id},{gender:req.body.gender, age:req.body.age, activity_level:req.body.activity_level, weight:req.body.weight, height:req.body.height, goal: req.body.goal, calories: ucalories} )
+    .then(function (user) {
+      
       //caluclating calories algorithm
-      if (User.gender === "Male") {
-        var bmr =
-          655.1 +
-          9.563 * parseInt(User.weight) +
-          1.85 * parseInt(User.height) -
-          4.676 * parseInt(User.age);
-        console.log(
-          `gender:${User.gender}    weight:${parseInt(
-            User.weight
-          )}  height:${parseInt(User.height)}  age:${parseInt(User.age)}`
-        );
+      if (req.body.gender === "Male") {
+        var bmr = 655.1 + 9.563 * parseInt(req.body.weight) + 1.85 * parseInt(req.body.height) - 4.676 * parseInt(req.body.age);
+        console.log(`gender:${req.body.gender} weight:${parseInt( req.body.weight)} height:${parseInt(req.body.height)} age:${parseInt(req.body.age)}`);
       } else {
-        var bmr =
-          66.47 +
-          13.75 * parseInt(User.weight) +
-          5.003 * parseInt(User.height) -
-          6.755 * parseInt(User.age);
-        console.log(
-          `gender:${User.gender}   weight:${parseInt(
-            User.weight
-          )}    height:${parseInt(User.height)}    age:${parseInt(User.age)}`
-        );
+        var bmr = 66.47 + 13.75 * parseInt(req.body.weight) + 5.003 * parseInt(req.body.height) - 6.755 * parseInt(req.body.age);
+        console.log(`gender:${req.body.gender} weight:${parseInt(req.body.weight)} height:${parseInt(req.body.height)} age:${parseInt(req.body.age)}`);
       }
-      var rawcal = bmr * User.activity_level;
-      if (User.goal === "1") {
+      var rawcal = bmr * req.body.activity_level;
+      if (req.body.goal === "1") {
         ucalories = rawcal - 500;
-        updateCal(ucalories);
+        updateCal(user, ucalories);
+        res.send(user);
+        console.log(user.calories,'----------------------131');
       } else {
         ucalories = rawcal + 500;
-        updateCal(ucalories);
+        updateCal(user,ucalories);
+        res.send(user);
+        console.log(user.calories,'----------------------136');
       }
-    });
+    })
+    function updateCal(user, ucalories) {
+      User.updateMany({calories: ucalories});
+      console.log(ucalories,'---------141');
+      console.log(user.calories,'----------------------142');
+      };
 
-    async function updateCal(ucalories) {
-      User.findOneAndUpdate(
-        { _id: req.params.id },
-        { calories: await ucalories }
-      ).then(function (User) {
-        console.log("done");
-        res.send(User);
-        console.log(ucalories);
-      });
-    }
-  });
-};
+}
+    
+  
 
-module.exports.dietPlan = (req, res) => {
+module.exports.DietPlan = (req, res) => {
   var breakfast = [],
     lunch = [],
     dinner = [];
@@ -320,7 +301,7 @@ function CreateDietPlan(calories, arrfavbreakfast, arrfavlunch, arrfavdinner) {
         }
       });
   });
-
+  //dietPlan.findOneAndUpdate({user_id: User._id}, {user_dietplan: dietplan});
   return dietplan;
 }
 
