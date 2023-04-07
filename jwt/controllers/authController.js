@@ -442,3 +442,10 @@ module.exports.addfood = async (req, res) => {
     res.status(405).json({ err });
   }
 };
+
+
+module.exports.foodData = async (req, res) => {
+  Food.findOne({Food_id: req.params.id}).then(function(food){
+    res.send(food);
+  })
+}
