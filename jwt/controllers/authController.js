@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Food = require("../models/Food");
-const dietPlan = require("../models/dietPlan");
+//const dietPlan = require("../models/dietPlan");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 var nodemailer = require("nodemailer");
@@ -91,8 +91,8 @@ module.exports.logout_get = (req, res) => {
 };
 
 module.exports.getstarted_put = async (req, res) => {
-    User.findByIdAndUpdate({_id: req.params.id},{gender:req.body.gender, age:req.body.age, activity_level:req.body.activity_level, weight:req.body.weight, height:req.body.height, goal: req.body.goal, calories: ucalories} )
-    .then(function (user) {
+    User.findByIdAndUpdate({_id: req.params.id},{gender:req.body.gender, age:req.body.age, activity_level:req.body.activity_level, weight:req.body.weight, height:req.body.height, goal: req.body.goal},{ new: true } )
+    .then(async function (user) {
       
       //caluclating calories algorithm
       if (req.body.gender === "Male") {
@@ -105,45 +105,44 @@ module.exports.getstarted_put = async (req, res) => {
       var rawcal = bmr * req.body.activity_level;
       if (req.body.goal === "1") {
         ucalories = rawcal - 500;
-        updateCal(user, ucalories);
-        res.send(user);
-        console.log(user.calories,'----------------------131');
-      } else {
+        const temp = ucalories;
+         await updateCal( user,  temp);
+      
+        return temp;
+      } else if(req.body.goal === "2"){
         ucalories = rawcal + 500;
-        updateCal(user,ucalories);
-        res.send(user);
-        console.log(user.calories,'----------------------136');
+        const temp = ucalories;
+         await updateCal( user, temp);
+        
+
+        return temp;
       }
+      
     })
-    function updateCal(user, ucalories) {
-      User.updateMany({calories: ucalories});
-      console.log(ucalories,'---------141');
-      console.log(user.calories,'----------------------142');
-      };
+    async function updateCal(user, temp){
+      User.findByIdAndUpdate({_id: req.params.id},{calories: await temp},{ new: true }).then(function(user){
+        res.send(user);
+      })
+    }
+
 
 }
     
   
 
-module.exports.DietPlan = (req, res) => {
+module.exports.DietPlan = async (req, res) => {
   var breakfast = [],
     lunch = [],
     dinner = [];
-  User.findById({ _id: req.params.id }, req.body).then(function () {
-    User.findOneAndUpdate({ _id: req.params.id }, req.body).then(
+  // User.findById({ _id: req.params.id }, req.body).then(function () {
+    User.findOneAndUpdate({ _id: req.params.id }, req.body,{ new: true }).then(
       async function (User) {
         breakfast = req.body.breakfast;
         lunch = req.body.lunch;
         dinner = req.body.dinner;
-        updateUfood(breakfast, lunch, dinner);
-        res.send(
-          await CreateDietPlan(
-            User.calories,
-            User.breakfast,
-            User.lunch,
-            User.dinner
-          )
-        );
+         updateUfood(breakfast, lunch, dinner);
+         CreateDietPlan(await User.calories,await User.breakfast,await User.lunch,await User.dinner,await User);
+          //updateUdietplan(CreateDietPlan(User.calories,User.breakfast, User.lunch, User.dinner, User)); 
       }
     );
     function updateUfood(foodid) {
@@ -153,13 +152,174 @@ module.exports.DietPlan = (req, res) => {
           breakfast: Array.from(breakfast),
           lunch: Array.from(lunch),
           dinner: Array.from(dinner),
-        }
-      ).then(function (User) {
-        console.log(breakfast, lunch, dinner);
-        console.log(User);
-      });
+        },{ new: true }
+      )
     }
-  });
+    
+    async function updateUdietplan(temp) {
+      User.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          dietplan: await temp
+        },{ new: true }
+      ).then(async function (User) {
+        res.send(User);
+        //console.log(User.dietplan, "---------------------------user diet plan");
+      });
+    };
+
+
+
+
+    async function CreateDietPlan(calories, arrfavbreakfast, arrfavlunch, arrfavdinner, user) {
+      const longest_array = (arr1, arr2, arr3) => {
+        if (arr1.length >= arr2.length && arr1.length >= arr3.length)
+          return arr1.length;
+        if (arr2.length >= arr1.length && arr2.length >= arr3.length)
+          return arr2.length;
+        if (arr3.length >= arr1.length && arr3.length >= arr2.length)
+          return arr3.length;
+      };
+    
+      var breakfastCalories = calories * 0.3;
+      var lunchCalories = calories * 0.5;
+      var dinnerCalories = calories * 0.2;
+      const max_arr_lenth = longest_array(
+        arrfavbreakfast,
+        arrfavlunch,
+        arrfavdinner
+      );
+     
+    
+      //BREAKFAST
+      arrfavbreakfast.forEach((favbreakfastitem, index) => {
+        Food.findOne({ Food_id: favbreakfastitem })
+          .then(async function (Food) {
+            if (breakfastCalories - Food.food_calories_per_preferred_serving > 0) {
+              dietplan.breakfast.push(await Food.Food_id);
+              breakfastCalories =
+                breakfastCalories - Food.food_calories_per_preferred_serving;
+            }
+          })
+          .then(async () => {
+            if (
+              index === max_arr_lenth - 1 &&
+              index !== arrfavlunch.length - 1 &&
+              index !== arrfavdinner.length - 1
+            ) {
+              dietplan.reamaining =
+                breakfastCalories + lunchCalories + dinnerCalories;
+              //console.log("-----------diet plan from breakfast----------");
+              if (dietplan.reamaining >= 300) {
+                CreateDietPlan(
+                  dietplan.reamaining,
+                  arrfavbreakfast,
+                  arrfavlunch,
+                  arrfavdinner
+                );
+              } else {
+                const temp = await dietplan;
+                // updateUdietplan(temp);
+                //console.log(await dietplan, '---------dietplan');
+                //console.log(user.dietplan,'----------------------user plan');
+                //console.log(temp);
+                dietplan = {
+                  breakfast: [],
+                  lunch: [],
+                  dinner: [],
+                  reamaining: 0,
+                };
+               await updateUdietplan(await temp);
+                return temp;
+              }
+            }
+          });
+      });
+      //LUNCH
+      arrfavlunch.forEach((favlunchitem, index) => {
+        Food.findOne({ Food_id: favlunchitem })
+          .then(async function (Food) {
+            if (lunchCalories - Food.food_calories_per_preferred_serving >= 0) {
+              dietplan.lunch.push(await Food.Food_id);
+              lunchCalories =
+                lunchCalories - Food.food_calories_per_preferred_serving;
+            }
+          })
+          .then(async () => {
+            if (index === max_arr_lenth - 1 && index !== arrfavdinner.length - 1) {
+              dietplan.reamaining =
+                breakfastCalories + lunchCalories + dinnerCalories;
+              //console.log("-----------diet plan from lunch----------");
+              if (dietplan.reamaining >= 300) {
+                CreateDietPlan(
+                  dietplan.reamaining,
+                  arrfavbreakfast,
+                  arrfavlunch,
+                  arrfavdinner
+                );
+              } else {
+                const temp = dietplan;
+                //updateUdietplan(dietplan);
+                //console.log(await dietplan, '---------dietplan');
+                //console.log(temp);
+                dietplan = {
+                  breakfast: [],
+                  lunch: [],
+                  dinner: [],
+                  reamaining: 0,
+                };
+                await updateUdietplan(await temp);
+                return temp;
+              }
+            }
+            
+          });
+         
+      });
+    
+      //DINNER
+      arrfavdinner.forEach((favdinneritem, index) => {
+        Food.findOne({ Food_id: favdinneritem })
+          .then(async function (Food) {
+            if (dinnerCalories - Food.food_calories_per_preferred_serving >= 0) {
+              dietplan.dinner.push(await Food.Food_id);
+              dinnerCalories =
+                dinnerCalories - Food.food_calories_per_preferred_serving;
+            }
+          })
+          .then(async () => {
+            if (index === max_arr_lenth - 1) {
+              dietplan.reamaining =
+                breakfastCalories + lunchCalories + dinnerCalories;
+              //console.log("-----------diet plan from dinner----------");
+              if (dietplan.reamaining >= 300) {
+                CreateDietPlan(
+                  dietplan.reamaining,
+                  arrfavbreakfast,
+                  arrfavlunch,
+                  arrfavdinner
+                );
+              } else {
+                const temp = dietplan;
+                
+                //console.log(await dietplan, '---------dietplan');
+                //console.log(temp);
+                dietplan = {
+                  breakfast: [],
+                  lunch: [],
+                  dinner: [],
+                  reamaining: 0,
+                };
+                await updateUdietplan(await temp);
+                return temp;
+              }
+            }
+          });
+      });
+      
+      
+      return dietplan;
+    }
 };
 
 let dietplan = {
@@ -169,141 +329,11 @@ let dietplan = {
   reamaining: 0,
 };
 
-function CreateDietPlan(calories, arrfavbreakfast, arrfavlunch, arrfavdinner) {
-  const longest_array = (arr1, arr2, arr3) => {
-    if (arr1.length >= arr2.length && arr1.length >= arr3.length)
-      return arr1.length;
-    if (arr2.length >= arr1.length && arr2.length >= arr3.length)
-      return arr2.length;
-    if (arr3.length >= arr1.length && arr3.length >= arr2.length)
-      return arr3.length;
-  };
 
-  var breakfastCalories = calories * 0.3;
-  var lunchCalories = calories * 0.5;
-  var dinnerCalories = calories * 0.2;
-  const max_arr_lenth = longest_array(
-    arrfavbreakfast,
-    arrfavlunch,
-    arrfavdinner
-  );
 
-  //BREAKFAST
-  arrfavbreakfast.forEach((favbreakfastitem, index) => {
-    Food.findOne({ Food_id: favbreakfastitem })
-      .then(async function (Food) {
-        if (breakfastCalories - Food.food_calories_per_preferred_serving > 0) {
-          dietplan.breakfast.push(await Food.Food_id);
-          breakfastCalories =
-            breakfastCalories - Food.food_calories_per_preferred_serving;
-        }
-      })
-      .then(() => {
-        if (
-          index === max_arr_lenth - 1 &&
-          index !== arrfavlunch.length - 1 &&
-          index !== arrfavdinner.length - 1
-        ) {
-          dietplan.reamaining =
-            breakfastCalories + lunchCalories + dinnerCalories;
-          console.log("-----------diet plan from breakfast----------");
-          if (dietplan.reamaining >= 300) {
-            CreateDietPlan(
-              dietplan.reamaining,
-              arrfavbreakfast,
-              arrfavlunch,
-              arrfavdinner
-            );
-          } else {
-            const temp = dietplan;
-            console.log(temp);
-            dietplan = {
-              breakfast: [],
-              lunch: [],
-              dinner: [],
-              reamaining: 0,
-            };
-            return temp;
-          }
-        }
-      });
-  });
-  //LUNCH
-  arrfavlunch.forEach((favlunchitem, index) => {
-    Food.findOne({ Food_id: favlunchitem })
-      .then(async function (Food) {
-        if (lunchCalories - Food.food_calories_per_preferred_serving >= 0) {
-          dietplan.lunch.push(await Food.Food_id);
-          lunchCalories =
-            lunchCalories - Food.food_calories_per_preferred_serving;
-        }
-      })
-      .then(() => {
-        if (index === max_arr_lenth - 1 && index !== arrfavdinner.length - 1) {
-          dietplan.reamaining =
-            breakfastCalories + lunchCalories + dinnerCalories;
-          console.log("-----------diet plan from lunch----------");
-          if (dietplan.reamaining >= 300) {
-            CreateDietPlan(
-              dietplan.reamaining,
-              arrfavbreakfast,
-              arrfavlunch,
-              arrfavdinner
-            );
-          } else {
-            const temp = dietplan;
-            console.log(temp);
-            dietplan = {
-              breakfast: [],
-              lunch: [],
-              dinner: [],
-              reamaining: 0,
-            };
-            return temp;
-          }
-        }
-      });
-  });
 
-  //DINNER
-  arrfavdinner.forEach((favdinneritem, index) => {
-    Food.findOne({ Food_id: favdinneritem })
-      .then(async function (Food) {
-        if (dinnerCalories - Food.food_calories_per_preferred_serving >= 0) {
-          dietplan.dinner.push(await Food.Food_id);
-          dinnerCalories =
-            dinnerCalories - Food.food_calories_per_preferred_serving;
-        }
-      })
-      .then(() => {
-        if (index === max_arr_lenth - 1) {
-          dietplan.reamaining =
-            breakfastCalories + lunchCalories + dinnerCalories;
-          console.log("-----------diet plan from dinner----------");
-          if (dietplan.reamaining >= 300) {
-            CreateDietPlan(
-              dietplan.reamaining,
-              arrfavbreakfast,
-              arrfavlunch,
-              arrfavdinner
-            );
-          } else {
-            const temp = dietplan;
-            console.log(temp);
-            dietplan = {
-              breakfast: [],
-              lunch: [],
-              dinner: [],
-              reamaining: 0,
-            };
-            return temp;
-          }
-        }
-      });
-  });
-  //dietPlan.findOneAndUpdate({user_id: User._id}, {user_dietplan: dietplan});
-  return dietplan;
-}
+
+
 
 module.exports.forgetpassword_post = async (req, res) => {
   const email = req.body.email;
@@ -377,9 +407,8 @@ module.exports.resetpassword_put = async (req, res) => {
 };
 
 module.exports.userData = (req, res) => {
-  User.findOne({ _id: req.params.id }, req.body).then(function (User) {
+  User.findOne({ _id: req.params.id }).then(function (User) {
     res.send(User);
-    console.log(User.calories);
   });
 };
 

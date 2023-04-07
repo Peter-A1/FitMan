@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 
 const userSchema = new mongoose.Schema({
-    _id : mongoose.Schema.Types.ObjectId,
+    //_id : mongoose.Schema.Types.ObjectId,
     name: {
         type: String,
         required: [true, 'Please enter your name']
@@ -64,6 +64,9 @@ const userSchema = new mongoose.Schema({
         type: Array
     },
     dinner: {
+        type: Array
+    },
+    dietplan: {
         type: Array
     }
 
