@@ -196,7 +196,7 @@ module.exports.DietPlan = async (req, res) => {
         Food.findOne({ Food_id: favbreakfastitem })
           .then(async function (Food) {
             if (breakfastCalories - Food.food_calories_per_preferred_serving > 0) {
-              dietplan.breakfast.push(await Food.Food_id);
+              dietplan.breakfast.push(await Food);
               breakfastCalories =
                 breakfastCalories - Food.food_calories_per_preferred_serving;
             }
@@ -240,7 +240,7 @@ module.exports.DietPlan = async (req, res) => {
         Food.findOne({ Food_id: favlunchitem })
           .then(async function (Food) {
             if (lunchCalories - Food.food_calories_per_preferred_serving >= 0) {
-              dietplan.lunch.push(await Food.Food_id);
+              dietplan.lunch.push(await Food);
               lunchCalories =
                 lunchCalories - Food.food_calories_per_preferred_serving;
             }
@@ -282,7 +282,7 @@ module.exports.DietPlan = async (req, res) => {
         Food.findOne({ Food_id: favdinneritem })
           .then(async function (Food) {
             if (dinnerCalories - Food.food_calories_per_preferred_serving >= 0) {
-              dietplan.dinner.push(await Food.Food_id);
+              dietplan.dinner.push(await Food);
               dinnerCalories =
                 dinnerCalories - Food.food_calories_per_preferred_serving;
             }
