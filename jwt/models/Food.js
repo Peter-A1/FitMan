@@ -39,9 +39,12 @@ const FoodSchema = new mongoose.Schema({
         type : Number
     },
     preferred_serving :{
-        type : String
+        type : Number
     },
     min_serving :{
+        type : Number
+    },
+    measuring_unit :{
         type : String
     }
 })
