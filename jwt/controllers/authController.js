@@ -316,7 +316,23 @@ module.exports.DietPlan = async (req, res) => {
     return new_dietPlan;
   };
 
+  function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
   
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+  }
 
 
   async function CreateDietPlan(
@@ -326,23 +342,32 @@ module.exports.DietPlan = async (req, res) => {
     arrfavdinner,
     user
   ) {
-    const longest_array = (arr1, arr2, arr3) => {
-      if (arr1.length >= arr2.length && arr1.length >= arr3.length)
-        return arr1.length;
-      if (arr2.length >= arr1.length && arr2.length >= arr3.length)
-        return arr2.length;
-      if (arr3.length >= arr1.length && arr3.length >= arr2.length)
-        return arr3.length;
-    };
+
+    shuffle(arrfavbreakfast);
+    arrfavbreakfast.length = 3;
+    shuffle(arrfavlunch);
+    arrfavlunch.length = 3;
+    shuffle(arrfavdinner);
+    arrfavdinner.length = 3;
+
+    // const longest_array = (arr1, arr2, arr3) => {
+    //   if (arr1.length >= arr2.length && arr1.length >= arr3.length)
+    //     return arr1.length;
+    //   if (arr2.length >= arr1.length && arr2.length >= arr3.length)
+    //     return arr2.length;
+    //   if (arr3.length >= arr1.length && arr3.length >= arr2.length)
+    //     return arr3.length;
+    // };
 
     var breakfastCalories = calories * 0.3;
     var lunchCalories = calories * 0.5;
     var dinnerCalories = calories * 0.2;
-    const max_arr_lenth = longest_array(
-      arrfavbreakfast,
-      arrfavlunch,
-      arrfavdinner
-    );
+    // const max_arr_lenth = longest_array(
+    //   arrfavbreakfast,
+    //   arrfavlunch,
+    //   arrfavdinner
+    // );
+    const max_arr_lenth = 3;
 
     //BREAKFAST
     arrfavbreakfast.forEach((favbreakfastitem, index) => {
@@ -582,7 +607,7 @@ module.exports.addfood = async (req, res) => {
   } = req.body;
 
   try {
-    console.log("hello");
+    //console.log("hello");
     const food = await Food.create({
       Food_id,
       Food_name,
@@ -605,3 +630,13 @@ module.exports.foodData = async (req, res) => {
     res.send(food);
   });
 };
+
+
+module.exports.search = async (req, res) => {
+  let data = await Food.find({
+    "$or":[
+      {Food_name:{$regex:req.params.key}}
+    ]
+  });
+  res.send(data);
+}
