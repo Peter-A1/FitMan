@@ -638,5 +638,29 @@ module.exports.search = async (req, res) => {
       {Food_name:{$regex:req.params.key}}
     ]
   });
+  data.length = 100;
   res.send(data);
+};
+
+let favlist= {food: []};
+module.exports.favfood = async (req, res) => {
+  
+  User.findById({_id: req.params.id}).then(async function (user) {
+    favfood = user.breakfast.concat(user.lunch, user.dinner);
+    for(let i = 0; i <= favfood.length;i++){
+      Food.findOne({Food_id: favfood[i]}).then(function (Food) {
+        favlist.food.push(Food);
+        //console.log(i);
+        return favlist;
+      }).then(function(favlist){
+        if(i === favfood.length-1){
+          User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+            res.send(user.favfood);
+          })
+        }
+      })
+      
+    }
+  })
+  favlist= {food: []};
 }
