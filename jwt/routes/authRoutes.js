@@ -13,12 +13,13 @@ router.post('/forget-password', authController.forgetpassword_post);
 router.post('/reset-password/:id/:token', authController.resetpassword_put);
 router.get('/ip', authController.ip);
 router.get('/:id/userData', authController.userData);
-router.put('/:id/Dietplan', authController.DietPlan);
+router.get('/:id/Dietplan', authController.DietPlan);
 //router.get('/:id/plandata', authController.plandata);
 router.get('/fooddata/:id', authController.foodData);
 router.get('/search/:key', authController.search);
 router.get('/:id/favfood', authController.favfood);
 router.post('/addfood', authController.addfood);
-
+router.put('/:id/pickfood', authController.pickfood);
+router.put('/:id/removefood', authController.removefood);
 
 module.exports = router;

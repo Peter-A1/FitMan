@@ -58,13 +58,16 @@ const userSchema = new mongoose.Schema({
         default: ''
     },
     breakfast: {
-        type: Array
+        type: Array,
+        default: []
     },
     lunch: {
-        type: Array
+        type: Array,
+        default: []
     },
     dinner: {
-        type: Array
+        type: Array,
+        default: []
     },
     dietplan: {
         type: Array

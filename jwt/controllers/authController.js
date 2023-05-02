@@ -158,12 +158,12 @@ module.exports.DietPlan = async (req, res) => {
     lunch = [],
     dinner = [];
   // User.findById({ _id: req.params.id }, req.body).then(function () {
-  User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }).then(
+  User.findById({ _id: req.params.id }).then(
     async function (User) {
-      breakfast = req.body.breakfast;
-      lunch = req.body.lunch;
-      dinner = req.body.dinner;
-      updateUfood(breakfast, lunch, dinner);
+      breakfast = User.breakfast;
+      lunch = User.lunch;
+      dinner = User.dinner;
+      // updateUfood(breakfast, lunch, dinner);
       CreateDietPlan(
         await User.calories,
         await User.breakfast,
@@ -174,17 +174,17 @@ module.exports.DietPlan = async (req, res) => {
       //merge_dietPlan(User.dietplan);
     }
   );
-  function updateUfood(foodid) {
-    User.findOneAndUpdate(
-      { _id: req.params.id },
-      {
-        breakfast: Array.from(breakfast),
-        lunch: Array.from(lunch),
-        dinner: Array.from(dinner),
-      },
-      { new: true }
-    );
-  }
+  // function updateUfood(foodid) {
+  //   User.findOneAndUpdate(
+  //     { _id: req.params.id },
+  //     {
+  //       breakfast: Array.from(breakfast),
+  //       lunch: Array.from(lunch),
+  //       dinner: Array.from(dinner),
+  //     },
+  //     { new: true }
+  //   );
+  // }
 
   async function updateUdietplan(temp) {
     User.findOneAndUpdate(
@@ -638,13 +638,13 @@ module.exports.search = async (req, res) => {
       {Food_name:{$regex:req.params.key}}
     ]
   });
-  data.length = 100;
+  // data.length = 100;
   res.send(data);
 };
 
-let favlist= {food: []};
+
 module.exports.favfood = async (req, res) => {
-  
+  let favlist= {food: []};
   User.findById({_id: req.params.id}).then(async function (user) {
     favfood = user.breakfast.concat(user.lunch, user.dinner);
     for(let i = 0; i <= favfood.length;i++){
@@ -658,9 +658,31 @@ module.exports.favfood = async (req, res) => {
             res.send(user.favfood);
           })
         }
-      })
-      
+      })  
     }
   })
-  favlist= {food: []};
+}
+
+
+module.exports.pickfood = (req, res) => {
+    let breakfastpick=0;
+    let lunchpick=0;
+    let dinnerpick=0;
+  User.findById({_id: req.params.id}).then(function(user){
+    breakfastpick = user.breakfast.concat(req.body.breakfast);
+    lunchpick = user.lunch.concat(req.body.lunch);
+    dinnerpick = user.dinner.concat(req.body.dinner);
+  }).then(async function(){
+    User.findByIdAndUpdate({_id: req.params.id},{breakfast:await breakfastpick, lunch:await lunchpick, dinner:await dinnerpick}, {new: true}).then(function(user){
+      res.send(user);
+    })
+  })
+  
+}
+
+module.exports.removefood = (req, res) => {
+    User.findByIdAndUpdate({_id: req.params.id},{$pull: {breakfast:req.body.breakfast, lunch:req.body.lunch, dinner:req.body.dinner}}, {new: true}).then(function(user){
+      res.send(user);
+    })
+  
 }
