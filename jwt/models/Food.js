@@ -46,6 +46,9 @@ const FoodSchema = new mongoose.Schema({
     },
     measuring_unit :{
         type : String
+    },
+    image :{
+        type : String
     }
 })
 
