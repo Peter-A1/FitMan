@@ -650,7 +650,6 @@ module.exports.favfood = async (req, res) => {
     for(let i = 0; i <= favfood.length;i++){
       Food.findOne({Food_id: favfood[i]}).then(function (Food) {
         favlist.food.push(Food);
-        //console.log(i);
         return favlist;
       }).then(function(favlist){
         if(i === favfood.length-1){
@@ -665,6 +664,7 @@ module.exports.favfood = async (req, res) => {
 
 
 module.exports.pickfood = (req, res) => {
+  let favlist= [];
     let breakfastpick=0;
     let lunchpick=0;
     let dinnerpick=0;
@@ -674,15 +674,36 @@ module.exports.pickfood = (req, res) => {
     dinnerpick = user.dinner.concat(req.body.dinner);
   }).then(async function(){
     User.findByIdAndUpdate({_id: req.params.id},{breakfast:await breakfastpick, lunch:await lunchpick, dinner:await dinnerpick}, {new: true}).then(function(user){
-      res.send(user);
+      let favfood = user.breakfast.concat(user.lunch, user.dinner);
+      favfood.forEach((id, idx)=>{
+        Food.findOne({Food_id: id}).then(function (Food) {
+          favlist.push(Food);
+        }).then(function(){
+          if(idx === favfood.length-1){
+                  User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+                    res.send(user);
+                  })
+                }
+        })
+      })
     })
   })
-  
 }
 
 module.exports.removefood = (req, res) => {
+  let favlist= [];
     User.findByIdAndUpdate({_id: req.params.id},{$pull: {breakfast:req.body.breakfast, lunch:req.body.lunch, dinner:req.body.dinner}}, {new: true}).then(function(user){
-      res.send(user);
+      favfood = user.breakfast.concat(user.lunch, user.dinner);
+      favfood.forEach((id, idx)=>{
+        Food.findOne({Food_id: id}).then(function (Food) {
+          favlist.push(Food);
+        }).then(function(){
+          if(idx === favfood.length-1){
+                  User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+                    res.send(user);
+                  })
+                }
+        })
+      })
     })
-  
 }
