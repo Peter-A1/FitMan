@@ -17,7 +17,7 @@ router.get('/:id/Dietplan', authController.DietPlan);
 //router.get('/:id/plandata', authController.plandata);
 router.get('/fooddata/:id', authController.foodData);
 router.get('/search/:key', authController.search);
-router.get('/:id/favfood', authController.favfood);
+// router.get('/:id/favfood', authController.favfood);
 router.post('/addfood', authController.addfood);
 router.put('/:id/pickfood', authController.pickfood);
 router.put('/:id/removefood', authController.removefood);

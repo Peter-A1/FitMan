@@ -643,28 +643,29 @@ module.exports.search = async (req, res) => {
 };
 
 
-module.exports.favfood = async (req, res) => {
-  let favlist= {food: []};
-  User.findById({_id: req.params.id}).then(async function (user) {
-    favfood = user.breakfast.concat(user.lunch, user.dinner);
-    for(let i = 0; i <= favfood.length;i++){
-      Food.findOne({Food_id: favfood[i]}).then(function (Food) {
-        favlist.food.push(Food);
-        return favlist;
-      }).then(function(favlist){
-        if(i === favfood.length-1){
-          User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
-            res.send(user.favfood);
-          })
-        }
-      })  
-    }
-  })
-}
+// module.exports.favfood = async (req, res) => {
+//   let favlist= {food: []};
+//   User.findById({_id: req.params.id}).then(async function (user) {
+//     favfood = user.breakfast.concat(user.lunch, user.dinner);
+//     for(let i = 0; i <= favfood.length;i++){
+//       Food.findOne({Food_id: favfood[i]}).then(function (Food) {
+//         favlist.food.push(Food);
+//         return favlist;
+//       }).then(function(favlist){
+//         if(i === favfood.length-1){
+//           User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+//             res.send(user.favfood);
+//           })
+//         }
+//       })  
+//     }
+//   })
+// }
 
 
 module.exports.pickfood = (req, res) => {
   let favlist= [];
+  // let favfood = [];
     let breakfastpick=0;
     let lunchpick=0;
     let dinnerpick=0;
@@ -673,37 +674,72 @@ module.exports.pickfood = (req, res) => {
     lunchpick = user.lunch.concat(req.body.lunch);
     dinnerpick = user.dinner.concat(req.body.dinner);
   }).then(async function(){
-    User.findByIdAndUpdate({_id: req.params.id},{breakfast:await breakfastpick, lunch:await lunchpick, dinner:await dinnerpick}, {new: true}).then(function(user){
-      let favfood = user.breakfast.concat(user.lunch, user.dinner);
-      favfood.forEach((id, idx)=>{
-        Food.findOne({Food_id: id}).then(function (Food) {
+    User.findByIdAndUpdate({_id: req.params.id},{breakfast: breakfastpick, lunch: lunchpick, dinner: dinnerpick}, {new: true}).then(function(user){
+      favlist = user.favfood;
+       if(req.body.breakfast.length > 0){
+        Food.findOne({Food_id: req.body.breakfast}).then(function (Food) {
           favlist.push(Food);
-        }).then(function(){
-          if(idx === favfood.length-1){
-                  User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
-                    res.send(user);
-                  })
-                }
+          
+        }).then(function(user){
+          User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+            res.send(user);
+          })
         })
-      })
+       }else if(req.body.lunch.length > 0){
+        Food.findOne({Food_id: req.body.lunch}).then(function (Food) {
+          favlist.push(Food);
+        }).then(function(user){
+          User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+            res.send(user);
+          })
+        })
+       }else if(req.body.dinner.length > 0){
+        Food.findOne({Food_id: req.body.dinner}).then(function (Food) {
+          favlist.push(Food);
+        }).then(function(user){
+          User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+            res.send(user);
+          })
+        })
+       }
     })
   })
 }
 
+// favfood = favfood.concat(user.breakfast, user.lunch, user.dinner);
+//        favfood.forEach((id, idx)=>{
+//         Food.findOne({Food_id: id}).then(function (Food) {
+//           favlist.push(Food);
+//         }).then(function(){
+//           if(idx === favfood.length-1){
+//                   User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+//                     res.send(user);
+//                   })
+//                 }
+//         })
+//       })
+
 module.exports.removefood = (req, res) => {
-  let favlist= [];
-    User.findByIdAndUpdate({_id: req.params.id},{$pull: {breakfast:req.body.breakfast, lunch:req.body.lunch, dinner:req.body.dinner}}, {new: true}).then(function(user){
-      favfood = user.breakfast.concat(user.lunch, user.dinner);
-      favfood.forEach((id, idx)=>{
-        Food.findOne({Food_id: id}).then(function (Food) {
-          favlist.push(Food);
-        }).then(function(){
-          if(idx === favfood.length-1){
-                  User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
-                    res.send(user);
-                  })
-                }
-        })
-      })
-    })
-}
+        User.findByIdAndUpdate({_id: req.params.id},{$pull: {breakfast:req.body.breakfast, lunch:req.body.lunch, dinner:req.body.dinner}}, {new: true}).then(function(user){
+            let arr= user.favfood;
+            let del;
+            
+            if(req.body.hasOwnProperty('breakfast')){
+              del = arr.filter(obj => obj.Food_id !== req.body.breakfast);
+              User.findByIdAndUpdate({_id: req.params.id},{favfood: del},{new:true}).then(function(user){
+                res.send(user);
+              })
+            } else if(req.body.hasOwnProperty('lunch')){
+              del = arr.filter(obj => obj.Food_id !== req.body.lunch);
+              User.findByIdAndUpdate({_id: req.params.id},{favfood: del},{new:true}).then(function(user){
+                res.send(user);
+              })
+            } else if(req.body.hasOwnProperty('dinner')){
+              del = arr.filter(obj => obj.Food_id !== req.body.dinner);
+              User.findByIdAndUpdate({_id: req.params.id},{favfood: del},{new:true}).then(function(user){
+                res.send(user);
+              })
+            }
+          })
+      }
+    
