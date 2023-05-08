@@ -72,8 +72,14 @@ const userSchema = new mongoose.Schema({
     dietplan: {
         type: Array
     },
-    favfood: {
-        type: Array
+    favbreakfast: {
+        type: Array,
+    },
+    favlunch: {
+        type: Array,
+    },
+    favdinner: {
+        type: Array,
     }
 
 }); 

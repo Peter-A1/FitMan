@@ -675,29 +675,32 @@ module.exports.pickfood = (req, res) => {
     dinnerpick = user.dinner.concat(req.body.dinner);
   }).then(async function(){
     User.findByIdAndUpdate({_id: req.params.id},{breakfast: breakfastpick, lunch: lunchpick, dinner: dinnerpick}, {new: true}).then(function(user){
-      favlist = user.favfood;
+      
        if(req.body.breakfast.length > 0){
-        Food.findOne({Food_id: req.body.breakfast}).then(function (Food) {
-          favlist.push(Food);
+        favlist = user.favbreakfast;
+        Food.findOne({Food_id: req.body.breakfast}).then(async function (Food) {
+          favlist.push(await Food);
           
         }).then(function(user){
-          User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+          User.findByIdAndUpdate({_id:req.params.id},{favbreakfast: favlist}, {new: true}).then(function(user){
             res.send(user);
           })
         })
        }else if(req.body.lunch.length > 0){
+        favlist = user.favlunch;
         Food.findOne({Food_id: req.body.lunch}).then(function (Food) {
           favlist.push(Food);
         }).then(function(user){
-          User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+          User.findByIdAndUpdate({_id:req.params.id},{favlunch: favlist}, {new: true}).then(function(user){
             res.send(user);
           })
         })
        }else if(req.body.dinner.length > 0){
+        favlist = user.favdinner;
         Food.findOne({Food_id: req.body.dinner}).then(function (Food) {
           favlist.push(Food);
         }).then(function(user){
-          User.findByIdAndUpdate({_id:req.params.id},{favfood: favlist}, {new: true}).then(function(user){
+          User.findByIdAndUpdate({_id:req.params.id},{favdinner: favlist}, {new: true}).then(function(user){
             res.send(user);
           })
         })
@@ -721,22 +724,25 @@ module.exports.pickfood = (req, res) => {
 
 module.exports.removefood = (req, res) => {
         User.findByIdAndUpdate({_id: req.params.id},{$pull: {breakfast:req.body.breakfast, lunch:req.body.lunch, dinner:req.body.dinner}}, {new: true}).then(function(user){
-            let arr= user.favfood;
+            let arr;
             let del;
             
             if(req.body.hasOwnProperty('breakfast')){
+              arr= user.favbreakfast;
               del = arr.filter(obj => obj.Food_id !== req.body.breakfast);
-              User.findByIdAndUpdate({_id: req.params.id},{favfood: del},{new:true}).then(function(user){
+              User.findByIdAndUpdate({_id: req.params.id},{favbreakfast: del},{new:true}).then(function(user){
                 res.send(user);
               })
             } else if(req.body.hasOwnProperty('lunch')){
+              arr= user.favlunch;
               del = arr.filter(obj => obj.Food_id !== req.body.lunch);
-              User.findByIdAndUpdate({_id: req.params.id},{favfood: del},{new:true}).then(function(user){
+              User.findByIdAndUpdate({_id: req.params.id},{favlunch: del},{new:true}).then(function(user){
                 res.send(user);
               })
             } else if(req.body.hasOwnProperty('dinner')){
+              arr= user.favdinner;
               del = arr.filter(obj => obj.Food_id !== req.body.dinner);
-              User.findByIdAndUpdate({_id: req.params.id},{favfood: del},{new:true}).then(function(user){
+              User.findByIdAndUpdate({_id: req.params.id},{favdinner: del},{new:true}).then(function(user){
                 res.send(user);
               })
             }
