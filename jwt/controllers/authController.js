@@ -78,7 +78,7 @@ module.exports.login_post = async (req, res) => {
     const user = await User.login(email, password);
     const token = createToken(user._id);
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
-    res.status(200).json({ user: user, token: token });
+    res.send(user);
   } catch (err) {
     const errors = handleErrors(err);
     res.status(400).json({ errors });
@@ -157,13 +157,13 @@ module.exports.DietPlan = async (req, res) => {
   var breakfast = [],
     lunch = [],
     dinner = [];
-  // User.findById({ _id: req.params.id }, req.body).then(function () {
+  
   User.findById({ _id: req.params.id }).then(
     async function (User) {
       breakfast = User.breakfast;
       lunch = User.lunch;
       dinner = User.dinner;
-      // updateUfood(breakfast, lunch, dinner);
+      
       CreateDietPlan(
         await User.calories,
         await User.breakfast,
@@ -171,20 +171,10 @@ module.exports.DietPlan = async (req, res) => {
         await User.dinner,
         await User
       );
-      //merge_dietPlan(User.dietplan);
+      
     }
   );
-  // function updateUfood(foodid) {
-  //   User.findOneAndUpdate(
-  //     { _id: req.params.id },
-  //     {
-  //       breakfast: Array.from(breakfast),
-  //       lunch: Array.from(lunch),
-  //       dinner: Array.from(dinner),
-  //     },
-  //     { new: true }
-  //   );
-  // }
+
 
   async function updateUdietplan(temp) {
     User.findOneAndUpdate(
@@ -195,24 +185,10 @@ module.exports.DietPlan = async (req, res) => {
       { new: true }
     ).then(async function (User) {
       res.send(User);
-      //console.log(User.dietplan, "---------------------------user diet plan");
+      
     });
   }
 
-  //--------------------------start of work ----------------------------------------------
-  // {
-  // breakfast:[1,1,2,2,2,3,3],
-  // lunch:[1,3,4],
-  // dinner:[2,3,4],
-  // reamaining:int,
-  //}
-
-  // {
-  // breakfast:[{food_obj:1,number_of_rep},{}],
-  // lunch:[],
-  // dinner:[],
-  // reamaining:int,
-  //}
   const merge_dietPlan = (dietPlan) => {
     let new_dietPlan = {
       breakfast: [],
@@ -243,15 +219,11 @@ module.exports.DietPlan = async (req, res) => {
           n: food_counter,
         };
 
-        // let new_dietPlan_food = {...dietPlan.breakfast.find((breakfast_item) => breakfast_item.Food_id === unique_breakfast_id),
-        //   preferred_serving: "5", //dietPlan.breakfast.find((breakfast_item) => breakfast_item.Food_id === unique_breakfast_id).preferred_serving * food_counter, 
-        //   food_calories_per_preferred_serving: dietPlan.breakfast.find((breakfast_item) => breakfast_item.Food_id === unique_breakfast_id).food_calories_per_preferred_serving * food_counter
-        // } 
+        
           
         
 
         new_dietPlan.breakfast.push(new_dietPlan_food);
-        //unique_breakfast_item.Food_id
       });
     };
 
@@ -277,7 +249,6 @@ module.exports.DietPlan = async (req, res) => {
           n: food_counter,
         };
         new_dietPlan.lunch.push(new_dietPlan_food);
-        //unique_breakfast_item.Food_id
       });
     };
     
@@ -304,7 +275,6 @@ module.exports.DietPlan = async (req, res) => {
         };
 
         new_dietPlan.dinner.push(new_dietPlan_food);
-        //unique_breakfast_item.Food_id
       });
     };
     
@@ -350,23 +320,9 @@ module.exports.DietPlan = async (req, res) => {
     shuffle(arrfavdinner);
     arrfavdinner.length = 3;
 
-    // const longest_array = (arr1, arr2, arr3) => {
-    //   if (arr1.length >= arr2.length && arr1.length >= arr3.length)
-    //     return arr1.length;
-    //   if (arr2.length >= arr1.length && arr2.length >= arr3.length)
-    //     return arr2.length;
-    //   if (arr3.length >= arr1.length && arr3.length >= arr2.length)
-    //     return arr3.length;
-    // };
-
     var breakfastCalories = calories * 0.3;
     var lunchCalories = calories * 0.5;
     var dinnerCalories = calories * 0.2;
-    // const max_arr_lenth = longest_array(
-    //   arrfavbreakfast,
-    //   arrfavlunch,
-    //   arrfavdinner
-    // );
     const max_arr_lenth = 3;
 
     //BREAKFAST
@@ -390,7 +346,6 @@ module.exports.DietPlan = async (req, res) => {
           ) {
             dietplan.reamaining =
               breakfastCalories + lunchCalories + dinnerCalories;
-            //console.log("-----------diet plan from breakfast----------");
             if (dietplan.reamaining >= 300) {
               CreateDietPlan(
                 dietplan.reamaining,
@@ -400,17 +355,12 @@ module.exports.DietPlan = async (req, res) => {
               );
             } else {
               const temp = await dietplan;
-              // updateUdietplan(temp);
-              //console.log(await dietplan, '---------dietplan');
-              //console.log(user.dietplan,'----------------------user plan');
-              //console.log(temp);
               dietplan = {
                 breakfast: [],
                 lunch: [],
                 dinner: [],
                 reamaining: 0,
               };
-              // await updateUdietplan(await temp);
               let merged = merge_dietPlan(temp);
               await updateUdietplan(merged);
                 return merged;
@@ -445,9 +395,6 @@ module.exports.DietPlan = async (req, res) => {
               );
             } else {
               const temp = dietplan;
-              //updateUdietplan(dietplan);
-              //console.log(await dietplan, '---------dietplan');
-              //console.log(temp);
               dietplan = {
                 breakfast: [],
                 lunch: [],
@@ -476,7 +423,6 @@ module.exports.DietPlan = async (req, res) => {
           if (index === max_arr_lenth - 1) {
             dietplan.reamaining =
               breakfastCalories + lunchCalories + dinnerCalories;
-            //console.log("-----------diet plan from dinner----------");
             if (dietplan.reamaining >= 300) {
               CreateDietPlan(
                 dietplan.reamaining,
@@ -486,17 +432,12 @@ module.exports.DietPlan = async (req, res) => {
               );
             } else {
               const temp = dietplan;
-
-              //console.log(await dietplan, '---------dietplan');
-              //console.log(temp);
               dietplan = {
                 breakfast: [],
                 lunch: [],
                 dinner: [],
                 reamaining: 0,
               };
-              
-              // console.log(merge_dietPlan(temp),"---------------------------460");
               let merged = merge_dietPlan(temp);
               await updateUdietplan(merged);
                 return merged;
