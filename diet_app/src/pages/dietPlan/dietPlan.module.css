@@ -8,24 +8,84 @@
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-
 }
-.breakFast h1,.lunch h1,.dinner h1{
-    position: absolute;
-    top: -60px;
-    left: 0;
+.breakFast h1,
+.lunch h1,
+.dinner h1 {
+  position: absolute;
+  top: -60px;
+  left: 0;
 }
 
 .lunch {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-
 }
 
 .dinner {
   position: relative;
   display: flex;
   flex-wrap: wrap;
+}
 
+.snack {
+  font-size: 24px;
+  font-weight: 700;
+  color: #00adb5;
+}
+
+.generateBtn {
+  margin: 15px auto;
+  color: white;
+  font-weight: 700;
+  font-size: larger;
+  background-color: #00adb5;
+  width: 300px;
+  padding: 20px 0;
+  border: 0;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.gBtnContainer {
+  width: 100%;
+  display: flex;
+}
+
+.calc_calories_first {
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.container_for_calc_calories {
+  flex-direction: column;
+  align-items: center;
+  height: 200px;
+  justify-content: space-evenly;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.container_for_calc_calories button {
+  color: white;
+  font-weight: 700;
+  font-size: larger;
+  background-color: #00adb5;
+  width: 300px;
+  padding: 20px 0;
+  border: 0;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.tcalories {
+  margin: 50px 0px;
+}
+
+.ncalories {
+  font-size: 24px;
+  font-weight: 700;
+  color: #00adb5;
 }

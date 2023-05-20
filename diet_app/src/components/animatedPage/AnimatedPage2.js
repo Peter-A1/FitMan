@@ -2,9 +2,9 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const animations = {
-  initial: { opacity: 0, x: 100, y: 350 },
+  initial: { opacity: 0, x: 100, y: 400 },
   animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -100, y: 350 },
+  exit: { opacity: 0, x: -100, y: 400 },
 };
 
 export const AnimatedPage2 = ({ children }) => {

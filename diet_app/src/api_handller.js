@@ -41,7 +41,7 @@ export const getData2 = async (url) => {
   try {
     const response = await fetch(url);
     const json = await response.json();
-    console.log(json);
+    //  console.log('from api func',url);
     return await json
   } catch (error) {
     console.log("error", error);
@@ -57,11 +57,15 @@ export const put = async (url, data) => {
       "Content-type": "application/json",
     },
     body: JSON.stringify(data),
-  });
+  }
+  
+  );
 
+  console.log('test2')
   // Awaiting response.json()
   const resData = await response.json();
-
+  console.log('testeeeeeeeeee');
+  console.log(await resData);
   // Return response data
   return resData;
 };

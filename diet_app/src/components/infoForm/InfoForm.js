@@ -14,7 +14,6 @@ export const InfoForm = ({
   setcurrentPage,
 }) => {
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!token && !userData) {
       navigate("/login");
@@ -41,19 +40,29 @@ export const InfoForm = ({
       info.height &&
       info.weight
     ) {
-      const user_data = JSON.parse(localStorage.getItem("userData"));
-      await Apis.put(`http://${IP}:5000/${user_data._id}/getstarted`, info)
-        .then(async () => {
-          const temp_data = await Apis.getData2(
-            `http://${IP}:5000/${user_data._id}/userData`
-          );
-          setUserData(await temp_data);
-        })
-        .then(() => {
-          setcurrentPage("profile");
-          navigate("/profile");
-          window.location.reload(false);
-        });
+      if (info.age < 10) {
+        alert("your age should be atleast 10");
+      } else if (info.height < 80) {
+        alert("your height should be atleast 80");
+      } else if (info.weight < 40) {
+        alert("your weight should be atleast 40");
+      } else {
+        const user_data = JSON.parse(localStorage.getItem("userData"));
+        await Apis.put(`http://${IP}:5000/${user_data._id}/getstarted`, info)
+          .then(async () => {
+            console.log("test");
+            const temp_data = await Apis.getData2(
+              `http://${IP}:5000/${user_data._id}/userData`
+            );
+            console.log("--------?", await temp_data);
+            setUserData(await temp_data);
+          })
+          .then(() => {
+            setcurrentPage("search");
+            navigate("/search");
+            window.location.reload(false);
+          });
+      }
     } else {
       alert(
         "please make sure you filled out the whole form before submitting "
@@ -257,19 +266,19 @@ export const InfoForm = ({
               <h3>What is your goal?</h3>
               <div className={styles.options_container}>
                 <button
-                  className={` ${info.goal === 1 ? styles.chosen : ""}`}
+                  className={` ${info.goal === "1" ? styles.chosen : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    setinfo({ ...info, goal: 1 });
+                    setinfo({ ...info, goal: "1" });
                   }}
                 >
                   Lose weight
                 </button>
                 <button
-                  className={` ${info.goal === 2 ? styles.chosen : ""}`}
+                  className={` ${info.goal === "2" ? styles.chosen : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    setinfo({ ...info, goal: 2 });
+                    setinfo({ ...info, goal: "2" });
                   }}
                 >
                   Gain Weight

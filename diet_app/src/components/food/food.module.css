@@ -1,35 +1,69 @@
-.food_container{
-    margin: 60px 10px;
-    background-color: white;
-    position: relative;
-    width: 300px;
-    height: 200px;
-    border-radius: 15px;
-    box-shadow: 0 4px 5px rgb(0 0 0 / 30%);
-    text-align: right;
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
+
+.food_container {
+  margin: 60px 10px;
+  background-color: white;
+  position: relative;
+  width: 300px;
+  height: 200px;
+  border-radius: 15px;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 30%);
+  text-align: right;
 }
-.food_container img{
-    position: absolute;
-    top: -40px;
-    left: 10px;
-    border-radius: 50%;
-    box-shadow: 0 4px 5px rgb(0 0 0 / 50%);
+.food_container img {
+  position: absolute;
+  top: -40px;
+  left: 10px;
+  border-radius: 50%;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 50%);
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-position: center;
 }
-.name_text{
-    position: absolute;
-    font-size: 24px;
-    font-weight: bold;
-    top: 50px;
-    left: 20px;
+.name_text {
+  position: absolute;
+  font-size: 24px;
+  font-weight: bold;
+  top: 50px;
+  left: 20px;
 }
-.serving_text{
-    position: absolute;
-    color: #777989;
-    left: 20px;
-    top: 85px;
+.serving_text {
+  position: absolute;
+  color: #777989;
+  left: 20px;
+  top: 90px;
 }
-.calories_text{
-    position: absolute;
-    right: 20px;
-    bottom: 10px;
+
+.category_text {
+  position: absolute;
+  color: #777989;
+  left: 20px;
+  top: 110px;
+}
+
+.calories_text {
+  position: absolute;
+  right: 20px;
+  bottom: 0px;
+}
+
+.food_container i {
+  cursor: pointer;
+  font-size: 30px;
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+}
+
+.like_container{
+  cursor: pointer;
+}
+
+.like_text{
+  position: absolute;
+  font-family: 'Dancing Script', cursive;
+  font-size: 18px;
+  bottom: 15px;
+  left: 60px;
 }

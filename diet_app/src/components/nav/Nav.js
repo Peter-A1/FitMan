@@ -54,20 +54,41 @@ export const Nav = ({ currentPage, token, userData }) => {
         ""
       )}
 
-      {userData.calories>200 ? (
-        <Link
+        {userData?<Link
           to="/dietplan"
           className={`${styles.navLink} ${
             currentPage === "dietplan" ? `${styles.active}` : ""
           } ${show_nav_on_mobile ? styles.show : ""}`}
         >
          Diet Plan
+        </Link>:''}
+      
+
+      {userData ? (
+        <Link
+          to="/favorite"
+          className={`${styles.navLink} ${
+            currentPage === "favorite" ? `${styles.active}` : ""
+          } ${show_nav_on_mobile ? styles.show : ""}`}
+        >
+          My Favorite Food
         </Link>
       ) : (
         ""
       )}
 
-      {currentPage === "home" ? (
+      
+        <Link
+          to="/search"
+          className={`${styles.navLink} ${
+            currentPage === "search" ? `${styles.active}` : ""
+          } ${show_nav_on_mobile ? styles.show : ""}`}
+        >
+         Search
+        </Link>
+   
+
+      {/* {currentPage === "home" ? (
         <a
           className={`${styles.small_navLink} ${styles.navLink} ${
             show_nav_on_mobile ? styles.show : ""
@@ -121,7 +142,7 @@ export const Nav = ({ currentPage, token, userData }) => {
         
       ) : (
         ""
-      )}
+      )} */}
 
       {/* {currentPage === "home" ? (
         <a

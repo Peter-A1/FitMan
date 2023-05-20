@@ -47,10 +47,10 @@ export const LoginForm = ({
     // console.log(res.errors.email);
     if (res.hasOwnProperty("errors")) {
       // console.log("log in failed");
-      handel_errors_state(res.errors.email);
+      handel_errors_state(res.errors);
     } else {
       // console.log("log in succss!");
-      setUserData(res.user);
+      setUserData(res);
       setToken(res.token);
       window.location.reload(false);
       navigate("/");
@@ -58,10 +58,10 @@ export const LoginForm = ({
   };
 
   const handel_errors_state = (err) => {
-    if (err === "That email is not registered") {
-      setErrors({ email_err: err, password_err: "" });
-    } else if (err === "That password is not correct") {
-      setErrors({ email_err: "", password_err: err });
+    if (err.email === "That email is not registered") {
+      setErrors({ email_err: err.email, password_err: "" });
+    } else if (err.password === "That password is not correct") {
+      setErrors({ email_err: "", password_err: err.password });
     } else {
       alert("something went wrong please try again later");
     }

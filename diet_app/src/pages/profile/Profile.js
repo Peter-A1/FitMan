@@ -16,30 +16,6 @@ export const Profile = ({ currentPage, setcurrentPage, token, userData }) => {
     }
   });
 
-  const calculate_calories = () => {
-    let calories = 0;
-    //caluclating calories algorithm
-    if (userData.gender == "Male") {
-      var bmr =
-        655.1 +
-        9.563 * userData.weight +
-        1.85 * userData.height -
-        4.676 * userData.age;
-    } else {
-      var bmr =
-        66.47 +
-        13.75 * userData.weight +
-        5.003 * userData.height -
-        6.755 * userData.age;
-    }
-    var rawcal = bmr * userData.activity_level;
-    if (userData.goal == "1") {
-       calories = rawcal - 500;
-    } else if (userData.goal == "2") {
-       calories = rawcal + 500;
-    }
-    return calories;
-  };
 
 
   return (
@@ -106,7 +82,7 @@ export const Profile = ({ currentPage, setcurrentPage, token, userData }) => {
               <div className={styles.field}>
                 <span>CALORIES</span>
                 <div className={styles.value_container}>
-                  {Math.round(calculate_calories())}
+                  {Math.round(userData.calories)}
                 </div>
               </div>
 

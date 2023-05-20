@@ -9,11 +9,17 @@ import * as Apis from "./api_handller";
 import { useEffect, useState } from "react";
 import InfoForm from "./components/infoForm/InfoForm";
 import DietPlan from "./pages/dietPlan/DietPlan";
+import Favorite from "./pages/favorite/Favourite";
+import Search from "./pages/Search/Search";
 
 function App() {
   const [currentPage, setcurrentPage] = useState("");
   const [IP, setIP] = useState();
-
+  const [userINFO, setuserINFO] = useState(
+    localStorage.getItem("userData")
+      ? JSON.parse(localStorage.getItem("userData"))
+      : ""
+  );
   useEffect(() => {
     const getData2 = async (url) => {
       try {
@@ -26,7 +32,7 @@ function App() {
       }
     };
     //getData2("http://localhost:5000/ip"); //the end point is not working
-    setIP("192.168.1.38"); // change the ip to the local ip address
+    setIP("localhost"); // change the ip to the local ip address
   }, []);
 
   //clearing the token and user data after 30 min
@@ -40,6 +46,7 @@ function App() {
     localStorage.setItem("token", received_token);
   };
   const setUserData = async (received_user_data) => {
+    setuserINFO(received_user_data)
     localStorage.setItem("userData", JSON.stringify(received_user_data));
   };
 
@@ -55,10 +62,7 @@ function App() {
               setcurrentPage={setcurrentPage}
               IP={IP}
               token={localStorage.getItem("token")}
-              userData={
-                localStorage.getItem("userData")
-                  ? JSON.parse(localStorage.getItem("userData"))
-                  : ""
+              userData={userINFO
               }
             />
           }
@@ -72,10 +76,7 @@ function App() {
               currentPage={currentPage}
               setcurrentPage={setcurrentPage}
               token={localStorage.getItem("token")}
-              userData={
-                localStorage.getItem("userData")
-                  ? JSON.parse(localStorage.getItem("userData"))
-                  : ""
+              userData={userINFO
               }
             />
           }
@@ -91,10 +92,7 @@ function App() {
               setToken={setToken}
               setUserData={setUserData}
               token={localStorage.getItem("token")}
-              userData={
-                localStorage.getItem("userData")
-                  ? JSON.parse(localStorage.getItem("userData"))
-                  : ""
+              userData={userINFO
               }
             />
           }
@@ -108,10 +106,7 @@ function App() {
               currentPage={currentPage}
               setcurrentPage={setcurrentPage}
               token={localStorage.getItem("token")}
-              userData={
-                localStorage.getItem("userData")
-                  ? JSON.parse(localStorage.getItem("userData"))
-                  : ""
+              userData={userINFO
               }
             />
           }
@@ -125,10 +120,7 @@ function App() {
               setUserData={setUserData}
               setcurrentPage={setcurrentPage}
               token={localStorage.getItem("token")}
-              userData={
-                localStorage.getItem("userData")
-                  ? JSON.parse(localStorage.getItem("userData"))
-                  : ""
+              userData={userINFO
               }
             />
           }
@@ -143,10 +135,37 @@ function App() {
               setUserData={setUserData}
               setcurrentPage={setcurrentPage}
               token={localStorage.getItem("token")}
-              userData={
-                localStorage.getItem("userData")
-                  ? JSON.parse(localStorage.getItem("userData"))
-                  : ""
+              userData={userINFO
+              }
+            />
+          }
+        />
+
+        <Route
+          path="favorite"
+          element={
+            <Favorite
+              IP={IP}
+              currentPage={currentPage}
+              setUserData={setUserData}
+              setcurrentPage={setcurrentPage}
+              token={localStorage.getItem("token")}
+              userData={userINFO
+              }
+            />
+          }
+        />
+
+        <Route
+          path="Search"
+          element={
+            <Search
+              IP={IP}
+              currentPage={currentPage}
+              setUserData={setUserData}
+              setcurrentPage={setcurrentPage}
+              token={localStorage.getItem("token")}
+              userData={userINFO
               }
             />
           }
