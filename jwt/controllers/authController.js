@@ -313,17 +313,17 @@ module.exports.DietPlan = async (req, res) => {
     user
   ) {
 
-    shuffle(arrfavbreakfast);
-    arrfavbreakfast.length = 3;
-    shuffle(arrfavlunch);
-    arrfavlunch.length = 3;
-    shuffle(arrfavdinner);
-    arrfavdinner.length = 3;
+    // shuffle(arrfavbreakfast);
+    // arrfavbreakfast.length = 3;
+    // shuffle(arrfavlunch);
+    // arrfavlunch.length = 3;
+    // shuffle(arrfavdinner);
+    // arrfavdinner.length = 3;
 
     var breakfastCalories = calories * 0.3;
     var lunchCalories = calories * 0.5;
     var dinnerCalories = calories * 0.2;
-    const max_arr_lenth = 3;
+    const max_arr_lenth = Math.max(arrfavbreakfast.length,arrfavlunch.length,arrfavdinner.length);
 
     //BREAKFAST
     arrfavbreakfast.forEach((favbreakfastitem, index) => {
@@ -346,7 +346,7 @@ module.exports.DietPlan = async (req, res) => {
           ) {
             dietplan.reamaining =
               breakfastCalories + lunchCalories + dinnerCalories;
-            if (dietplan.reamaining >= 300) {
+            if (dietplan.reamaining >= 500) {
               CreateDietPlan(
                 dietplan.reamaining,
                 arrfavbreakfast,
@@ -386,7 +386,7 @@ module.exports.DietPlan = async (req, res) => {
             dietplan.reamaining =
               breakfastCalories + lunchCalories + dinnerCalories;
             //console.log("-----------diet plan from lunch----------");
-            if (dietplan.reamaining >= 300) {
+            if (dietplan.reamaining >= 500) {
               CreateDietPlan(
                 dietplan.reamaining,
                 arrfavbreakfast,
@@ -423,7 +423,7 @@ module.exports.DietPlan = async (req, res) => {
           if (index === max_arr_lenth - 1) {
             dietplan.reamaining =
               breakfastCalories + lunchCalories + dinnerCalories;
-            if (dietplan.reamaining >= 300) {
+            if (dietplan.reamaining >= 500) {
               CreateDietPlan(
                 dietplan.reamaining,
                 arrfavbreakfast,
