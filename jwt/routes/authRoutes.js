@@ -21,5 +21,6 @@ router.get('/search/:key', authController.search);
 router.post('/addfood', authController.addfood);
 router.put('/:id/pickfood', authController.pickfood);
 router.put('/:id/removefood', authController.removefood);
+// router.get('/:id/cleardietplan', authController.cleardietplan);
 
 module.exports = router;

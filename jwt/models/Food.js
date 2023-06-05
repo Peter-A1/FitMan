@@ -29,10 +29,10 @@ const FoodSchema = new mongoose.Schema({
     fiber :{
         type : Number
     },
-    cholestrol :{
+    protien :{
         type : Number
     },
-    carbs :{
+    carb :{
         type : Number
     },
     fats :{
@@ -42,6 +42,9 @@ const FoodSchema = new mongoose.Schema({
         type : Number
     },
     min_serving :{
+        type : Number
+    },
+    max_serving :{
         type : Number
     },
     measuring_unit :{
