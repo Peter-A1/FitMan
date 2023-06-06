@@ -14,7 +14,6 @@ export const DietPlan = ({
   setUserData,
   IP,
 }) => {
-  
   const [userInfo, setuserInfo] = useState(userData);
   setcurrentPage("dietplan");
   let navigate = useNavigate();
@@ -25,18 +24,41 @@ export const DietPlan = ({
   });
 
   const generateDietplanHandller = async () => {
-    
-      if(JSON.parse(localStorage.getItem("userData")).breakfast.length>=3 &&JSON.parse(localStorage.getItem("userData")).lunch.length>=3 &&JSON.parse(localStorage.getItem("userData")).dinner.length>=3){
-        console.log('condition true')
-        const res = await Apis.getData2(
-          `http://localhost:5000/${userData._id}/dietplan`
-        );
-        console.log(await res)
-        setUserData(await res); //to set the local storage
-        setuserInfo(await res); // to set the state
-      }else alert('you need atleast 3 food items in each category to be able to generate a diet plan')
-  
-    
+    if (
+      JSON.parse(localStorage.getItem("userData")).breakfast.length >= 3 &&
+      JSON.parse(localStorage.getItem("userData")).lunch.length >= 3 &&
+      JSON.parse(localStorage.getItem("userData")).dinner.length >= 3
+    ) {
+      console.log("condition true");
+      const res = await Apis.getData2(
+        `http://localhost:5000/${userData._id}/dietplan`
+      );
+      console.log(await res);
+      setUserData(await res); //to set the local storage
+      setuserInfo(await res); // to set the state
+    } else
+      alert(
+        "you need atleast 3 food items in each category to be able to generate a diet plan"
+      );
+  };
+  const calc_calories_for_meal = (meal) => {
+    let total = 0;
+    if (meal === "breakfast") {
+      userData.dietplan[0].breakfast.forEach(breakfast_element => {
+        total+=(breakfast_element.n*breakfast_element.food_item.food_calories_per_preferred_serving)
+      });
+    } else if (meal === "lunch") {
+      
+      userData.dietplan[0].lunch.forEach(lunch_element => {
+        total+=(lunch_element.n*lunch_element.food_item.food_calories_per_preferred_serving)
+      });
+    } else if (meal === "dinner") {
+      
+      userData.dietplan[0].dinner.forEach(dinner_element => {
+        total+=(dinner_element.n*dinner_element.food_item.food_calories_per_preferred_serving)
+      });
+    }
+    return Math.round(total)
   };
 
   return (
@@ -57,22 +79,37 @@ export const DietPlan = ({
               {userInfo.dietplan.length > 0 ? (
                 <div>
                   {" "}
-                  <h2 className={styles.tcalories}>your total calories <span className={styles.ncalories}>{Math.round(userData.calories)}</span></h2>
+                  <h2 className={styles.tcalories}>
+                    your total calories{" "}
+                    <span className={styles.ncalories}>
+                      {Math.round(userData.calories)}
+                    </span>
+                  </h2>
                   <div className={styles.breakFast}>
-                    <h1>BreakFast</h1>
+                    <h1>BreakFast</h1>{" "}
+                    <span className={styles.meal_calories}>{calc_calories_for_meal('breakfast')}</span>
                     {console.log(userInfo.dietplan[0].breakfast)}
-                    {JSON.parse(localStorage.getItem("userData")).dietplan[0].breakfast.map((food, index) => (
+                    {JSON.parse(
+                      localStorage.getItem("userData")
+                    ).dietplan[0].breakfast.map((food, index) => (
                       <Food
                         setUserData={setUserData}
                         key={index}
                         userData={userData}
-                        cardcategory={'breakfast'}
-                        isliked={userData.favbreakfast.filter((favitem)=>food.food_item.Food_id===favitem.Food_id).length>0?true:false}
+                        cardcategory={"breakfast"}
+                        isliked={
+                          userData.favbreakfast.filter(
+                            (favitem) =>
+                              food.food_item.Food_id === favitem.Food_id
+                          ).length > 0
+                            ? true
+                            : false
+                        }
                         foodObject={{
                           id: food.food_item.Food_id,
                           name: food.food_item.Food_name,
                           serving: `${
-                            food.food_item.preferred_serving * food.n
+                            Math.round(food.food_item.preferred_serving * food.n)
                           } ${food.food_item.measuring_unit}`,
                           calories:
                             food.food_item.food_calories_per_preferred_serving *
@@ -85,18 +122,28 @@ export const DietPlan = ({
                   </div>
                   <div className={styles.lunch}>
                     <h1>Lunch</h1>
-                    {JSON.parse(localStorage.getItem("userData")).dietplan[0].lunch.map((food, index) => (
+                    <span className={styles.meal_calories}>{calc_calories_for_meal('lunch')}</span>
+                    {JSON.parse(
+                      localStorage.getItem("userData")
+                    ).dietplan[0].lunch.map((food, index) => (
                       <Food
                         setUserData={setUserData}
                         key={index}
                         userData={userData}
-                        cardcategory={'lunch'}
-                        isliked={userData.favlunch.filter((favitem)=>food.food_item.Food_id===favitem.Food_id).length>0?true:false}
+                        cardcategory={"lunch"}
+                        isliked={
+                          userData.favlunch.filter(
+                            (favitem) =>
+                              food.food_item.Food_id === favitem.Food_id
+                          ).length > 0
+                            ? true
+                            : false
+                        }
                         foodObject={{
                           id: food.food_item.Food_id,
                           name: food.food_item.Food_name,
                           serving: `${
-                            food.food_item.preferred_serving * food.n
+                            Math.round(food.food_item.preferred_serving * food.n)
                           } ${food.food_item.measuring_unit}`,
                           calories:
                             food.food_item.food_calories_per_preferred_serving *
@@ -109,18 +156,28 @@ export const DietPlan = ({
                   </div>
                   <div className={styles.dinner}>
                     <h1>Dinner</h1>
-                    {JSON.parse(localStorage.getItem("userData")).dietplan[0].dinner.map((food, index) => (
+                    <span className={styles.meal_calories}>{calc_calories_for_meal('dinner')}</span>
+                    {JSON.parse(
+                      localStorage.getItem("userData")
+                    ).dietplan[0].dinner.map((food, index) => (
                       <Food
                         setUserData={setUserData}
                         key={index}
                         userData={userData}
-                        cardcategory={'dinner'}
-                        isliked={userData.favdinner.filter((favitem)=>food.food_item.Food_id===favitem.Food_id).length>0?true:false}
+                        cardcategory={"dinner"}
+                        isliked={
+                          userData.favdinner.filter(
+                            (favitem) =>
+                              food.food_item.Food_id === favitem.Food_id
+                          ).length > 0
+                            ? true
+                            : false
+                        }
                         foodObject={{
                           id: food.food_item.Food_id,
                           name: food.food_item.Food_name,
                           serving: `${
-                            food.food_item.preferred_serving * food.n
+                            Math.round(food.food_item.preferred_serving * food.n)
                           } ${food.food_item.measuring_unit}`,
                           calories:
                             food.food_item.food_calories_per_preferred_serving *

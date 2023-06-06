@@ -25,9 +25,6 @@ const Search = ({
     const result = await Apis.getData2(
       `http://localhost:5000/search/${e.target.value}`
     );
-    // console.log(e.target.value)
-    // console.log('--------------')
-    // console.log(await result)
     setsearchResult(await result);
   };
   const changeSearchCategory_to_breakfast_Handller = () => {

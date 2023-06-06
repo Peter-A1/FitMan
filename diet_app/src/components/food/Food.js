@@ -12,6 +12,7 @@ export const Food = ({
   const [userInfo, setuserInfo] = useState(userData); //for re rendernig
   const [isLiked, setisLiked] = useState(isliked);
   const [cardCategory, setcardCategory] = useState(cardcategory);
+  
   const likeClickHandller = async () => {
     if (cardCategory === "breakfast") {
       const temp_userInfo = await Apis.put(
@@ -101,7 +102,7 @@ export const Food = ({
       <p className={styles.name_text}>{foodObject.name}</p>
       <p className={styles.serving_text}>serving: {foodObject.serving}</p>
       {/* <p className={styles.category_text}>category: {cardCategory.category}</p> */}
-      <p className={styles.calories_text}> calories {foodObject.calories}</p>
+      <p className={styles.calories_text}> calories {Math.round(foodObject.calories)}</p>
 
       {userData ?  cardCategory === "breakfast"?(
         <div>

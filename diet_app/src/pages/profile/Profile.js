@@ -82,14 +82,15 @@ export const Profile = ({ currentPage, setcurrentPage, token, userData }) => {
               <div className={styles.field}>
                 <span>CALORIES</span>
                 <div className={styles.value_container}>
-                  {Math.round(userData.calories)}
+                  {Math.round(userData.calories>10?userData.calories:'')}
                 </div>
               </div>
 
               <div className={styles.field}>
                 <span>GOAL</span>
                 <div className={styles.value_container}>
-                  {userData.goal === 1 ? "Lose weight" : "Gain weight"}
+                {console.log(userData.goal)}
+                  {userData.goal === 1 ? "Lose weight": userData.goal === 2 ? "Gain weight" : ""}
                 </div>
               </div>
             </div>

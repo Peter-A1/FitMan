@@ -206,16 +206,6 @@ export const Home = ({ IP, token, userData, currentPage, setcurrentPage }) => {
             <p className={styles.a}>{QA[3].a}</p>
           </div>
         </section>
-
-        {/* <section id="about" className={styles.section_about}>
-          <h1>about section</h1>{" "}
-          <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cum
-            voluptatibus id sapiente nostrum iure! Ab beatae consequatur dolor
-            soluta repudiandae molestias aliquam laudantium in perferendis,
-            autem quia asperiores quod atque?
-          </p>
-        </section> */}
       </AnimatedPage>
     </div>
   );

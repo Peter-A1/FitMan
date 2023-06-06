@@ -44,7 +44,7 @@ export const LoginForm = ({
   };
 
   const handel_tokken_and_userData = (res) => {
-    // console.log(res.errors.email);
+    console.log(`res line 47 login form`,res);
     if (res.hasOwnProperty("errors")) {
       // console.log("log in failed");
       handel_errors_state(res.errors);

@@ -20,6 +20,7 @@ export const InfoForm = ({
     }
   });
 
+  const [warnings, setwarnings] = useState({ age: "", weight: "", height: "" });
   const [step, setstep] = useState(0);
   const [info, setinfo] = useState({
     gender: "",
@@ -71,11 +72,41 @@ export const InfoForm = ({
   };
 
   const inputHandler = (e) => {
+    console.log(e.target.id);
     e.preventDefault();
     const key = e.target.id;
     const value = e.target.value;
     setinfo({ ...info, [key]: value });
-    console.log(info);
+
+    if (e.target.id === "age") {
+      if (e.target.id === "age" && e.target.value < 10) {
+        setwarnings({
+          ...warnings,
+          age: "your age should be atleast above 10",
+        });
+      } else {
+        setwarnings({ ...warnings, age: "" });
+      }
+    } else if (e.target.id === "weight") {
+      if (e.target.id === "weight" && e.target.value < 40) {
+        setwarnings({
+          ...warnings,
+          weight: "your weight should be atleast 40",
+        });
+      } else {
+        setwarnings({ ...warnings, weight: "" });
+      }
+    } else if (e.target.id === "height") {
+      if (e.target.id === "height" && e.target.value < 80) {
+        setwarnings({
+          ...warnings,
+          height: "your height should be atleast 80",
+        });
+      } else {
+        setwarnings({ ...warnings, height: "" });
+      }
+    }
+
   };
   const next_step_handller = (e) => {
     e.preventDefault();
@@ -229,7 +260,9 @@ export const InfoForm = ({
                 value={info.age}
                 onChange={inputHandler}
               />
+              <p className={styles.warnings}>{warnings.age}</p>
             </div>
+
             <div
               className={`${styles.form_control} ${
                 step === 3 ? styles.show2 : styles.hide
@@ -244,6 +277,7 @@ export const InfoForm = ({
                 value={info.weight}
                 onChange={inputHandler}
               />
+              <p className={styles.warnings}>{warnings.weight}</p>
             </div>
 
             <div
@@ -260,6 +294,7 @@ export const InfoForm = ({
                 value={info.height}
                 onChange={inputHandler}
               />
+              <p className={styles.warnings}>{warnings.height}</p>
             </div>
 
             <div className={` ${step === 4 ? styles.show2 : styles.hide}`}>

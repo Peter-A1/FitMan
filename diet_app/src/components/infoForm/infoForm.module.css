@@ -11,7 +11,6 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
- 
 }
 
 .progress_bar.one {
@@ -206,4 +205,12 @@ form {
   for mobile devices */
     -webkit-tap-highlight-color: transparent;
   }
+}
+
+.warnings {
+  position: absolute;
+  color: red;
+  top: 33px;
+  left: 10px;
+  font-size: 13px;
 }
