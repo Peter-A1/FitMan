@@ -52,6 +52,9 @@ const FoodSchema = new mongoose.Schema({
     },
     image :{
         type : String
+    },
+    max_marco: {
+        type: String
     }
 })
 
