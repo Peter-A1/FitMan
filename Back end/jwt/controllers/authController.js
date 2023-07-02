@@ -329,8 +329,8 @@ module.exports.DietPlan = async (req, res) => {
     let dinner_counter=0
     
 
-    while (breakfastCalories>150 && breakfast_counter!==arrfavbreakfast.length) {
-    
+    while (breakfastCalories>5 && breakfast_counter!==arrfavbreakfast.length) {
+      
       arrfavbreakfast.forEach((foodObject)=>{
         const length =dietplan.breakfast.filter((breakfastObject)=>breakfastObject.Food_id===foodObject.Food_id).length
         if(foodObject.max_serving?foodObject.preferred_serving*length<foodObject.max_serving:true){
@@ -343,12 +343,12 @@ module.exports.DietPlan = async (req, res) => {
         }
       })
     }
-    while (lunchCalories>150 && lunch_counter!==arrfavlunch.length) {
+    while (lunchCalories>5 && lunch_counter!==arrfavlunch.length) {
     
       arrfavlunch.forEach((foodObject)=>{
         const length =dietplan.lunch.filter((lunchObject)=>lunchObject.Food_id===foodObject.Food_id).length
-        console.log(dietplan.lunch.filter((lunchObject)=>lunchObject.Food_id===foodObject.Food_id))
-         console.log(foodObject.Food_name)
+       // console.log(dietplan.lunch.filter((lunchObject)=>lunchObject.Food_id===foodObject.Food_id))
+         //console.log(foodObject.Food_name)
         // console.log('--------->condetion','prefered serving ',foodObject.max_serving?foodObject.preferred_serving:'','length',length,'max serving',foodObject.max_serving)
         // console.log(foodObject.max_serving?foodObject.preferred_serving*length<=foodObject.max_serving:true)
         if(foodObject.max_serving?foodObject.preferred_serving*length<foodObject.max_serving:true){
@@ -363,7 +363,7 @@ module.exports.DietPlan = async (req, res) => {
       })
     }
 
-    while (dinnerCalories>150 && dinner_counter!==arrfavdinner.length) {
+    while (dinnerCalories>5 && dinner_counter!==arrfavdinner.length) {
     
       arrfavdinner.forEach((foodObject)=>{
         const length =dietplan.dinner.filter((dinnerObject)=>dinnerObject.Food_id===foodObject.Food_id).length
